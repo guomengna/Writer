@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Writer</string>
+    <string name="touxiang">头像</string>
+    <string name="fanhui">返回</string>
+    <string name="zhuanlan">专栏</string>
+</resources>

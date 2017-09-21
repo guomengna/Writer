@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#09ce58</color>
+    <color name="colorPrimaryDark">#26babf</color>
+    <color name="colorAccent">#8145d6</color>
+    <color name="back_of_touxiang">#b4efdb</color>
+    <color name="back_of_bar">#10c1ac</color>
+    <color name="color_of_line">#36373d</color>
+</resources>
