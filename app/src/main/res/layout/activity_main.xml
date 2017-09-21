@@ -13,8 +13,7 @@
         android:orientation="horizontal"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="0dp">
-
-        <ImageButton
+        <com.example.guome.writer.Image.CircleImageView
             android:id="@+id/touxiang"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -22,6 +21,7 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="15dp"
+            android:background="@mipmap/icon"
             android:onClick="onclick" />
 
         <Button
@@ -39,14 +39,23 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/color_of_line" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <ImageView
+            android:id="@+id/bianxie"
+            android:layout_width="150dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="150dp"
+            android:onClick="onclick"/>
+        <ImageView
+            android:id="@+id/tongbu"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:onClick="onclick"/>
+    </LinearLayout>
 
 </LinearLayout>
