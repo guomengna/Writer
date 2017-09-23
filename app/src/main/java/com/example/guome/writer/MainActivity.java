@@ -9,10 +9,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.guome.writer.Activity.PersonInformationActivity;
-import com.example.guome.writer.Image.CircleImageView;
-import static com.example.guome.writer.R.styleable.View;
 
-public class MainActivity extends Activity {
+import de.hdodenhof.circleimageview.CircleImageView;
+public class MainActivity extends Activity implements Button.OnClickListener{
     CircleImageView touxiang;
     Button zhuanlan;
     ImageView bianxie,tongbu;
@@ -20,35 +19,33 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        touxiang= findViewById(R.id.touxiang);
-        zhuanlan=findViewById(R.id.zhuanlan);
-        bianxie=findViewById(R.id.bianxie);
-        tongbu=findViewById(R.id.touxiang);
-        touxiang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        touxiang= (CircleImageView) findViewById(R.id.touxiang);
+        touxiang.setOnClickListener(this);
+        zhuanlan=(Button) findViewById(R.id.zhuanlan);
+        zhuanlan.setOnClickListener(this);
+        bianxie=(ImageView) findViewById(R.id.bianxie);
+        bianxie.setOnClickListener(this);
+        tongbu=(ImageView)findViewById(R.id.touxiang);
+        tongbu.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.touxiang:
                 Intent intent=new Intent();
                 intent.setClass(MainActivity.this, PersonInformationActivity.class);
                 startActivity(intent);
-            }
-        });
-        zhuanlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.zhuanlan:
                 Toast.makeText(MainActivity.this,"点击了专栏按钮",Toast.LENGTH_SHORT).show();
-            }
-        });
-        bianxie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.bianxie:
                 Toast.makeText(MainActivity.this,"点击了编写按钮",Toast.LENGTH_SHORT).show();
-            }
-        });
-        tongbu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.tongbu:
                 Toast.makeText(MainActivity.this,"点击了同步按钮",Toast.LENGTH_SHORT).show();
-            }
-        });
+                break;
+        }
     }
 }
