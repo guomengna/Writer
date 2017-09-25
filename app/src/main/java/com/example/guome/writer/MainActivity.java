@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guome.writer.Activity.PersonInformationActivity;
@@ -13,7 +14,7 @@ import com.example.guome.writer.Activity.PersonInformationActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends Activity implements Button.OnClickListener{
     CircleImageView touxiang;
-    Button zhuanlan;
+    TextView zhuanlan;
     ImageView bianxie,tongbu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class MainActivity extends Activity implements Button.OnClickListener{
         setContentView(R.layout.activity_main);
         touxiang= (CircleImageView) findViewById(R.id.touxiang);
         touxiang.setOnClickListener(this);
-        zhuanlan=(Button) findViewById(R.id.zhuanlan);
+        zhuanlan=(TextView) findViewById(R.id.zhuanlan);
         zhuanlan.setOnClickListener(this);
         bianxie=(ImageView) findViewById(R.id.bianxie);
         bianxie.setOnClickListener(this);

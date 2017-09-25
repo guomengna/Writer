@@ -3,4 +3,8 @@
     <string name="touxiang">头像</string>
     <string name="fanhui">返回</string>
     <string name="zhuanlan">专栏</string>
+    <string name="login">登录</string>
+    <string name="rapid_register">快速注册</string>
+    <string name="user_name">用户名/邮箱</string>
+    <string name="password">密码</string>
 </resources>
