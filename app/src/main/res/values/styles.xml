@@ -7,5 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="A1_Font">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/back_of_touxiang</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:shadowColor">#ff5a9487</item>
+        <item name="android:shadowDx">1.0</item>
+        <item name="android:shadowDy">-1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+    </style>
 
 </resources>

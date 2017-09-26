@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/round_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,6 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.PersonInformationActivity"></activity>
+        <activity android:name="com.example.guome.writer.MainActivity"></activity>
+        <activity android:name=".Activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

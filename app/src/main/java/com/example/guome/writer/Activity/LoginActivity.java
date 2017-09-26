@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.example.guome.writer.JavaBean.User;
 import com.example.guome.writer.MainActivity;
 import com.example.guome.writer.R;
+
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -45,11 +47,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private EditText inputUsername;
     private EditText inputPassword;
     private long mExitTime;
-
+    private String ApplicationID="933f9a1decf27d18db673da059d2d861";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login_layout);
         login = (Button) this.findViewById(R.id.login);
         register = (TextView) this.findViewById(R.id.register);
         inputUsername = (EditText) findViewById(R.id.inputUsername);
@@ -58,6 +60,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         login.setOnClickListener(this);
         register.setOnClickListener(this);
         reset_psw.setOnClickListener(this);
+        Bmob.initialize(this, ApplicationID);
     }
     @Override
     public void onClick(View v) {
@@ -90,27 +93,25 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         user.setUsername(username);
         user.setPassword(password);
         login.setEnabled(false);
-        user.login(new SaveListener<BmobUser>() {
+        user.login(new SaveListener<BmobUser>() {//登录失败，为什么？？？
             @Override
-            public void done(BmobUser bmobUser, BmobException e) {
+            public void done(BmobUser user, BmobException e) {
                 if(e==null){
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     User currentUser = BmobUser.getCurrentUser(User.class);
-                    finish();
-                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
-                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
                 }else{
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     public void register() {
-//        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
     @Override
     public boolean onKeyDown(int keyCode,KeyEvent event){

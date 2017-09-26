@@ -6,4 +6,7 @@
     <color name="back_of_touxiang">#b4efdb</color>
     <color name="back_of_bar">#10c1ac</color>
     <color name="color_of_line">#79bcb4</color>
+    <color name="login">#C82DB4C2</color>
+    <color name="login1">#C82597A3</color>
+    <color name="welcome">#FFFCFBFB</color>
 </resources>
