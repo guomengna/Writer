@@ -2,6 +2,9 @@ package com.example.guome.writer.Activity;
 
 /**
  * Created by guome on 2017/9/25.
+ * 使用原生BmobUser类实现登录功能，应该是WriterUser类在继承时出现问题
+ * 用户名：guomengna
+ * 密码：941209
  */
 
 import android.app.Activity;
@@ -20,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.guome.writer.JavaBean.User;
+import com.example.guome.writer.JavaBean.WriterUser;
 import com.example.guome.writer.MainActivity;
+import com.example.guome.writer.MyTool.ClearEditText;
 import com.example.guome.writer.R;
 
 import cn.bmob.v3.Bmob;
@@ -41,26 +46,30 @@ import static android.R.attr.tag;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private Button login;
+    private Button loginIn;
     private TextView register;
     private TextView reset_psw;
-    private EditText inputUsername;
-    private EditText inputPassword;
+    private ClearEditText inputUsername;
+    private ClearEditText inputPassword;
     private long mExitTime;
     private String ApplicationID="933f9a1decf27d18db673da059d2d861";
+    private String username;
+    private String password;
+    private final WriterUser writerUser=new WriterUser();
+    private final BmobUser bmobUser=new BmobUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        login = (Button) this.findViewById(R.id.login);
+        Bmob.initialize(this, ApplicationID);
+        loginIn = (Button) this.findViewById(R.id.login);
         register = (TextView) this.findViewById(R.id.register);
-        inputUsername = (EditText) findViewById(R.id.inputUsername);
-        inputPassword = (EditText) findViewById(R.id.inputPassword);
+        inputUsername = (ClearEditText) findViewById(R.id.inputUsername);
+        inputPassword = (ClearEditText) findViewById(R.id.inputPassword);
         reset_psw=(TextView)findViewById(R.id.reset_psw);
-        login.setOnClickListener(this);
+        loginIn.setOnClickListener(this);
         register.setOnClickListener(this);
         reset_psw.setOnClickListener(this);
-        Bmob.initialize(this, ApplicationID);
     }
     @Override
     public void onClick(View v) {
@@ -83,28 +92,33 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         progressDialog.setMessage("登录中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
-        String username = inputUsername.getText().toString();
-        String password = inputPassword.getText().toString();
+        username = inputUsername.getText().toString();
+        password = inputPassword.getText().toString();
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        User user=new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        login.setEnabled(false);
-        user.login(new SaveListener<BmobUser>() {//登录失败，为什么？？？
+        bmobUser.setUsername(username);
+        bmobUser.setPassword(password);
+        loginIn.setEnabled(false);
+        bmobUser.login(new SaveListener<BmobUser>() {//登录失败，为什么？？？提示密码为空，为什么？？
             @Override
             public void done(BmobUser user, BmobException e) {
                 if(e==null){
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, writerUser.getUsername(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, writerUser.getPassword(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                    User currentUser = BmobUser.getCurrentUser(User.class);
+//                    WriterUser currentUser = BmobUser.getCurrentUser(WriterUser.class);
                 }else{
                     progressDialog.dismiss();
+                    loginIn.setEnabled(true);
                     Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, bmobUser.getUsername(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, bmobUser.getPassword(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
