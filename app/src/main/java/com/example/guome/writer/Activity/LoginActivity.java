@@ -101,7 +101,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         bmobUser.setUsername(username);
         bmobUser.setPassword(password);
         loginIn.setEnabled(false);
-        bmobUser.login(new SaveListener<BmobUser>() {//登录失败，为什么？？？提示密码为空，为什么？？
+        bmobUser.login(new SaveListener<BmobUser>() {
             @Override
             public void done(BmobUser user, BmobException e) {
                 if(e==null){
