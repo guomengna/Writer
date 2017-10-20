@@ -7,30 +7,27 @@
     android:id="@+id/index"
     >
 
-    <TextView
+    <ImageView
         android:id="@+id/welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="120dp"
-        android:text="@string/welcome"
-        android:textColor="@color/welcome"
-        android:textSize="30dp" />
+        android:layout_marginTop="150dp"
+        android:background="@mipmap/writer"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@mipmap/banquan"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="center_horizontal"
-            android:text="版权拥有者：guomnenga"
-            android:textColor="@color/welcome"
-            android:textSize="12dp" />
+            android:layout_gravity="center_horizontal"/>
     </RelativeLayout>
 
 </LinearLayout>
