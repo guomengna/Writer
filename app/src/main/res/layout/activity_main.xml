@@ -62,8 +62,7 @@
                 android:layout_height="78dp"
                 android:layout_marginLeft="50dp"
                 android:layout_gravity="center_vertical"
-                android:background="@mipmap/bianxie"
-
+                android:src="@drawable/bt_bianxie"
                 android:onClick="onClick" />
         </LinearLayout>
         <View
@@ -76,10 +75,10 @@
             android:weightSum="1">
             <ImageView
                 android:id="@+id/tongbu"
-                android:layout_width="54dp"
-                android:layout_height="55dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
-                android:background="@mipmap/tongbu"
+                android:src="@drawable/bt_tongbu"
                 android:layout_gravity="center_vertical"
                 android:onClick="onClick" />
         </LinearLayout>

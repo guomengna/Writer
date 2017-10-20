@@ -54,8 +54,8 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     private int mImgViewWidth;
     private float mInsertedImgWidth;
     private ViewTreeObserver vto;
-    private Button choose_pic_btn;
-    private Button cancel_btn;
+    private ImageButton choose_pic_btn;
+    private ImageButton cancel_btn;
     ProgressBar progressBar;
     ProgressDialog progressDialog;//进度显示框
     private String uplaodImg;

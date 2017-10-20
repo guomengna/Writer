@@ -30,11 +30,6 @@
             android:layout_marginEnd="15dp"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
-    <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:orientation="vertical"-->
-        <!--android:gravity="bottom">-->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -60,23 +55,25 @@
         </ScrollView>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
-        <Button android:id="@+id/choose_pic_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="照片"
-            android:layout_weight="1.0"/>
-        <Button android:id="@+id/cancel_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/choose_pic_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@mipmap/pic"
+            android:text="照片" />
+        <ImageButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="20dp"
             android:layout_weight="1.0"
-            android:text="取 消" />"
+            android:background="@mipmap/fond" />"
 
     </LinearLayout>
-    </LinearLayout>
-<!--</LinearLayout>-->
+</LinearLayout>
