@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.guome.writer.Activity.AddNewEasyActivity;
 import com.example.guome.writer.Activity.PersonInformationActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,6 +44,9 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 break;
             case R.id.bianxie:
                 Toast.makeText(MainActivity.this,"点击了编写按钮",Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent();
+                intent1.setClass(MainActivity.this, AddNewEasyActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.tongbu:
                 Toast.makeText(MainActivity.this,"点击了同步按钮",Toast.LENGTH_SHORT).show();

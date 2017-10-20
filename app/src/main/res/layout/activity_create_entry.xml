@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+
+    <RelativeLayout
+        android:id="@+id/titls"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/white" >
+
+
+        <TextView
+            android:id="@+id/dialog_cancel"
+            android:layout_width="53dp"
+            android:layout_height="23dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="27dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="dialog_cancel"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="entry_new"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="17sp" />
+
+
+        <TextView
+            android:id="@+id/entry_release"
+            android:layout_width="53dp"
+            android:layout_height="23dp"
+            android:layout_alignBaseline="@+id/dialog_cancel"
+            android:layout_alignBottom="@+id/dialog_cancel"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="17dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="entry_release"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="367dp"
+        android:layout_below="@id/titls"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="17dp"
+        android:scrollbars="vertical" >
+
+
+        <EditText
+            android:id="@+id/edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:gravity="top"
+            android:hint="发布词条内容" />
+    </ScrollView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@null" >
+
+        <ImageView
+            android:id="@+id/create_entry_a"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignTop="@+id/create_entry_picture"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/create_entry_picture"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:src="@mipmap/icon" />
+
+        <ImageView
+            android:id="@+id/create_entry_picture"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="108dp"
+            android:layout_marginRight="24dp"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:src="@mipmap/round_icon" />
+    </RelativeLayout>
+
+</RelativeLayout>

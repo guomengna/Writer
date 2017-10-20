@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--读写SD卡权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -32,7 +34,10 @@
         <activity android:name=".Activity.LoginActivity"></activity>
         <activity android:name="com.example.guome.writer.MainActivity"></activity>
         <activity android:name=".Activity.RegisterActivity"></activity>
-        <activity android:name=".Activity.AddNewEasyActivity"></activity>
+        <activity android:name=".Activity.AddNewEasyActivity">
+            <!--android:windowSoftInputMode="adjustPan"-->
+            <!--android:windowSoftInputMode="adjustResize|stateAlwaysHidden"-->
+        </activity>
     </application>
 
 </manifest>

@@ -8,7 +8,6 @@
         android:background="@color/back_of_bar"
         android:orientation="horizontal"
         android:weightSum="1">
-
         <ImageButton
             android:id="@+id/fanhui"
             android:layout_width="31dp"
@@ -17,7 +16,6 @@
             android:background="@mipmap/fanhui"
             android:onClick="onClick"
             android:layout_weight="0.01" />
-
         <TextView
             android:id="@+id/submit"
             android:layout_width="45dp"
@@ -32,20 +30,53 @@
             android:layout_marginEnd="15dp"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
-    <ScrollView
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="bottom">-->
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:fillViewport="false">
-        <EditText
-            android:id="@+id/addneweasy_edittext"
-            android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1.0">
+        <ScrollView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            android:background="@color/white"/>
-    </ScrollView>
-</LinearLayout>
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:scrollbars="vertical">
+            <EditText
+                android:id="@+id/addneweasy_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <Button android:id="@+id/choose_pic_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="照片"
+            android:layout_weight="1.0"/>
+        <Button android:id="@+id/cancel_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="取 消" />"
+
+    </LinearLayout>
+    </LinearLayout>
+<!--</LinearLayout>-->

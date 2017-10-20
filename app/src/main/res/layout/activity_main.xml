@@ -48,21 +48,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="38dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp">
-        <ImageView
-            android:id="@+id/bianxie"
-            android:layout_width="150dp"
-            android:layout_marginLeft="15dp"
-            android:layout_height="150dp"
-            android:onClick="onClick"/>
 
-        <ImageView
-            android:id="@+id/tongbu"
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/bianxie"
+                android:layout_width="56dp"
+                android:layout_height="78dp"
+                android:layout_marginLeft="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@mipmap/bianxie"
+
+                android:onClick="onClick" />
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_of_line"/>
+        <LinearLayout
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:onClick="onClick" />
+            android:weightSum="1">
+            <ImageView
+                android:id="@+id/tongbu"
+                android:layout_width="54dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="50dp"
+                android:background="@mipmap/tongbu"
+                android:layout_gravity="center_vertical"
+                android:onClick="onClick" />
+        </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_of_line" />
 </LinearLayout>
