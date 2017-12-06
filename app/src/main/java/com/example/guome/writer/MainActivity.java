@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guome.writer.Activity.AddNewEasyActivity;
+import com.example.guome.writer.Activity.LiwenList;
 import com.example.guome.writer.Activity.PersonInformationActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -17,6 +19,7 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     CircleImageView touxiang;
     TextView zhuanlan;
     ImageView bianxie,tongbu;
+    RelativeLayout enterLiwen,enterWenzhang;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,10 @@ public class MainActivity extends Activity implements Button.OnClickListener{
         bianxie.setOnClickListener(this);
         tongbu=(ImageView)findViewById(R.id.touxiang);
         tongbu.setOnClickListener(this);
+        enterLiwen=findViewById(R.id.liwen_enter);
+        enterLiwen.setOnClickListener(this);
+        enterWenzhang=findViewById(R.id.wenzhang_enter);
+        enterWenzhang.setOnClickListener(this);
     }
 
     @Override
@@ -50,6 +57,16 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 break;
             case R.id.tongbu:
                 Toast.makeText(MainActivity.this,"点击了同步按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.liwen_enter:
+                Intent intentLiwenList=new Intent();
+                intentLiwenList.setClass(MainActivity.this, LiwenList.class);
+                startActivity(intentLiwenList);
+                break;
+            case R.id.wenzhang_enter:
+                Intent intentEasyList=new Intent();
+                intentEasyList.setClass(MainActivity.this, LiwenList.class);
+                startActivity(intentEasyList);
                 break;
         }
     }

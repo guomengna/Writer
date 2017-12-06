@@ -18,6 +18,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     ProgressBar progressBar;
     ProgressDialog progressDialog;//进度显示框
     private String uplaodImg;
+    private Uri uri;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,6 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                 mInsertedImgWidth = mImgViewWidth * 0.8f;
             }
         });
-
     }
 
     @Override
@@ -92,23 +93,6 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                 //调用提交方法,首先提交到本地数据库，再提交成功则跳转，否则显示失败，重新提交
                 //跳转到text view界面，不再可编辑
                 submit();
-                //提交图片的方法，放在文章上传成功之中
-//                String picPath = "sdcard/temp.jpg";
-//                BmobFile bmobFile = new BmobFile(new File(picPath));
-//                bmobFile.uploadblock(new UploadFileListener() {
-//                    @Override
-//                    public void done(BmobException e) {
-//                        if(e==null){
-//                            Toast.makeText(AddNewEasyActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
-//                        }else{
-//                            Toast.makeText(AddNewEasyActivity.this,"图片上传失败",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                    @Override
-//                    public void onProgress(Integer value) {
-//                        // 返回的上传进度（百分比）
-//                    }
-//                });
                 break;
             case R.id.fanhui:
                 //保存到本地，之后退出
@@ -133,6 +117,12 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         progressDialog.show();
         //收集文章的数据
         content=addneweasy.getText().toString();
+        String content1 = addneweasy.getText().toString();
+//        Bundle data = new Bundle();
+//        Intent intent = new Intent(AddNewEasyActivity.this, DisPlay.class);
+//        data.putString("nei", content);
+//        intent.putExtra("neirong", data);
+//        startActivity(intent);
         Easy easy=new Easy();
         easy.setContent(content);
         easy.save(new SaveListener<String>() {
@@ -141,6 +131,26 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                 if(e==null){
                     progressDialog.dismiss();
                     Toast.makeText(AddNewEasyActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
+                    //提交图片的方法，放在文章上传成功之中
+                    //图片路径
+                    String picPath = getRealFilePath(AddNewEasyActivity.this,uri);
+                    String picstr="storage/1EF9-1702/DCIM/Camera/IMG_20171028_175422.jpg";
+                    File file =new File(picPath);
+                    BmobFile bmobFile = new BmobFile(file);//停在这一步，为什么？？？
+                    bmobFile.uploadblock(new UploadFileListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
+                                Toast.makeText(AddNewEasyActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(AddNewEasyActivity.this,"图片上传失败",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        @Override
+                        public void onProgress(Integer value) {
+                            // 返回的上传进度（百分比）
+                        }
+                    });
                 }else{
                     progressDialog.dismiss();
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
@@ -154,7 +164,8 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             //取得数据
-            Uri uri = data.getData();
+            uri = data.getData();
+            Toast.makeText(AddNewEasyActivity.this,getRealFilePath(AddNewEasyActivity.this,uri),Toast.LENGTH_SHORT).show();
             ContentResolver cr = AddNewEasyActivity.this.getContentResolver();
             Bitmap bitmap = null;
             Bundle extras = null;
@@ -181,7 +192,8 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
             mx.postScale(scaleW, scaleH);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, imgWidth, imgHeight, mx, true);
             final ImageSpan imageSpan = new ImageSpan(this,bitmap);
-            SpannableString spannableString = new SpannableString("test");
+            getRealFilePath(AddNewEasyActivity.this,uri);
+            SpannableString spannableString = new SpannableString(getRealFilePath(AddNewEasyActivity.this,uri));
             spannableString.setSpan(imageSpan, 0, spannableString.length(), SpannableString.SPAN_MARK_MARK);
             //光标移到下一行
             addneweasy.append("\n\n");
@@ -195,24 +207,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
             addneweasy.setSelection(addneweasy.getText().toString().length());//光标移到最后
         }
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == PICK_PIC) {
-//                if (data == null) {
-//                    Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Uri uri = data.getData();
-////                    Bitmap bitmap = getOriginalBitmap(uri);
-//                    Bitmap bitmap=getBitmapFromUri(uri,this);
-//
-//                    SpannableString ss = getBitmapMime(bitmap, uri);//运行到这里失败？？？biitmap显示为空，，为什么？？？
-//                    insertIntoEditText(ss);
-//                }
-//            }
-//        }
-//    }
+
     //把图片显示出来
     private void insertIntoEditText(SpannableString ss) {
         // 先获取Edittext中原有的内容

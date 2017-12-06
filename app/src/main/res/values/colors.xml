@@ -11,4 +11,6 @@
     <color name="welcome">#FFFCFBFB</color>
     <color name="white">#fcfbfb</color>
     <color name="black">#060606</color>
+    <color name="green">#255f39</color>
+
 </resources>

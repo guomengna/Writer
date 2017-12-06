@@ -38,6 +38,8 @@
             <!--android:windowSoftInputMode="adjustPan"-->
             <!--android:windowSoftInputMode="adjustResize|stateAlwaysHidden"-->
         </activity>
+        <activity android:name=".Activity.EasyList"></activity>
+        <activity android:name=".Activity.LiwenList"></activity>
     </application>
 
 </manifest>
