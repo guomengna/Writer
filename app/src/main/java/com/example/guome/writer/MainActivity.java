@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guome.writer.Activity.AddNewEasyActivity;
+import com.example.guome.writer.Activity.EasyList;
 import com.example.guome.writer.Activity.LiwenList;
 import com.example.guome.writer.Activity.PersonInformationActivity;
 
@@ -65,7 +66,7 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 break;
             case R.id.wenzhang_enter:
                 Intent intentEasyList=new Intent();
-                intentEasyList.setClass(MainActivity.this, LiwenList.class);
+                intentEasyList.setClass(MainActivity.this, EasyList.class);
                 startActivity(intentEasyList);
                 break;
         }

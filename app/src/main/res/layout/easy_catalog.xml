@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    >
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="70dp"
+       android:id="@+id/content"
+       android:layout_marginLeft="5dp"
+       android:layout_marginRight="5dp"
+       android:layout_marginTop="10dp"
+       android:textSize="14dp"
+       android:textColorHint="@color/color_of_line"
+       android:hint="文章内容"
+       android:gravity="center"
+       android:background="@color/list_back"
+       android:textColor="@color/black"/>
+
+</LinearLayout>
