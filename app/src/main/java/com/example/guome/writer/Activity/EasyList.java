@@ -18,13 +18,17 @@ import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.MyTool.DeleteSingleton;
 import com.example.guome.writer.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -37,16 +41,16 @@ public class EasyList extends Activity implements Button.OnClickListener{
     private ListView easyListView;
     private Button back;
     private SimpleAdapter productAdapter;
-    private List<Easy> easy;
+    private List<Easy> easy=new ArrayList<Easy>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.easylist_layout);
-
         easyListView = (ListView) findViewById(R.id.listView);
         back=findViewById(R.id.backa);
         back.setOnClickListener(this);
-        queryEasy();
+        //queryEasy();
+        queryByTime();
         easyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -118,6 +122,7 @@ public class EasyList extends Activity implements Button.OnClickListener{
         easyListView.setAdapter(productAdapter);
         productAdapter.notifyDataSetChanged();
     }
+
     public void delete(String objectId){
         Easy easys=new Easy();
         easys.setObjectId(objectId);
@@ -145,12 +150,13 @@ public class EasyList extends Activity implements Button.OnClickListener{
             show(easy);
         }
     }
-    //查询不到内容,有空指针错误
+    //查询不到内容,查询结果为0条，原因是模糊查询不能使用
+    //理想方式应该是全部查出来，用时间，如方法queryByTime()所示
     public void queryEasy(){
         Toast.makeText(EasyList.this,"这是查询方法",Toast.LENGTH_SHORT).show();
         BmobQuery<Easy> query = new BmobQuery<Easy>();
         //返回50条数据，如果不加上这条语句，默认返回10条数据
-        query.addWhereContains("content", "好");
+        query.addWhereEqualTo("content", "好");
         query.setLimit(50);
         Toast.makeText(EasyList.this,"即将进入查询执行",Toast.LENGTH_SHORT).show();
         //执行查询方法
@@ -159,20 +165,89 @@ public class EasyList extends Activity implements Button.OnClickListener{
             public void done(List<Easy> object, BmobException e) {
                 if(e==null){
                     Toast.makeText(EasyList.this,"查询成功，共"+object.size()+"条数据",Toast.LENGTH_SHORT).show();
-                    for (Easy easy : object) {
+                    //临时list用于存放查询到的文章
+                    List<Easy> easyTemp=new ArrayList<Easy>();
+                    for (Easy singleEasy : object) {
                         //获得数据的objectId信息
-                        easy.getObjectId();
+                        singleEasy.getObjectId();
                         //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                        easy.getCreatedAt();
+                        singleEasy.getCreatedAt();
                         //获得内容信息
-                        easy.getContent();
+                        singleEasy.getContent();
+                        easyTemp.add(singleEasy);
                     }
-                    DeleteSingleton.getInstance().setEasyList(easy);
-                    show(easy);
+                    //将临时list的值赋给easy，用于显示出来
+                    easy=easyTemp;
+                    if(easy!=null){
+                        Toast.makeText(EasyList.this,"easy+"+easy.size(),Toast.LENGTH_SHORT).show();
+                        DeleteSingleton.getInstance().setEasyList(easy);
+                        show(easy);
+                    }
                 }else{
                     Toast.makeText(EasyList.this,"查询失败",Toast.LENGTH_SHORT).show();
                     Toast.makeText(EasyList.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+    }
+    //使用时间的复合查询,到当前是时间为止的所有的数据都查询到
+    public void queryByTime(){
+        BmobQuery<Easy> query = new BmobQuery<Easy>();
+        List<BmobQuery<Easy>> and = new ArrayList<BmobQuery<Easy>>();
+        //大于00：00：00
+        BmobQuery<Easy> q1 = new BmobQuery<Easy>();
+        String start = "2015-05-01 00:00:00";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date  = null;
+        try {
+            date = sdf.parse(start);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        q1.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(date));
+        and.add(q1);
+        //小于23：59：59
+        BmobQuery<Easy> q2 = new BmobQuery<Easy>();
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String currentTime = sDateFormat.format(new java.util.Date());
+        String end = currentTime;
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date1  = null;
+        try {
+            date1 = sdf1.parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        q2.addWhereLessThanOrEqualTo("createdAt",new BmobDate(date1));
+        and.add(q2);
+        //添加复合与查询
+        query.and(and);
+        query.findObjects(new FindListener<Easy>() {
+            @Override
+            public void done(List<Easy> object, BmobException e) {
+                if(e==null){
+                    Toast.makeText(EasyList.this,"查询成功，共"+object.size()+"条数据",Toast.LENGTH_SHORT).show();
+                    //临时list用于存放查询到的文章
+                    List<Easy> easyTemp=new ArrayList<Easy>();
+                    for (Easy singleEasy : object) {
+                        //获得数据的objectId信息
+                        singleEasy.getObjectId();
+                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                        singleEasy.getCreatedAt();
+                        //获得内容信息
+                        singleEasy.getContent();
+                        easyTemp.add(singleEasy);
+                    }
+                    //将临时list的值赋给easy，用于显示出来
+                    easy=easyTemp;
+                    if(easy!=null){
+                        Toast.makeText(EasyList.this,"easy+"+easy.size(),Toast.LENGTH_SHORT).show();
+                        DeleteSingleton.getInstance().setEasyList(easy);
+                        show(easy);
+                    }
+                }else{
+                    Toast.makeText(EasyList.this,"查询失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EasyList.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }
         });
