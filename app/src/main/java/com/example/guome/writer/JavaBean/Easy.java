@@ -13,13 +13,19 @@ public class Easy extends BmobObject{
 //    private String objectId;
     private String content;
 //    private String[] picPaths;
-
+    private String title;
 
     public void setContent(String content) {
         this.content = content;
     }
+    public void setTitle(String title){
+        this.title=title;
+    }
 
-//    public void setObjectId(String objectId) {
+    public String getTitle() {
+        return title;
+    }
+    //    public void setObjectId(String objectId) {
 //        this.objectId = objectId;
 //    }
 

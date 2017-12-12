@@ -13,5 +13,6 @@
     <color name="list_back">#f5dbdb</color>
     <color name="black">#060606</color>
     <color name="green">#255f39</color>
+    <color name="easy_content">#ffffff</color>
 
 </resources>

@@ -4,18 +4,66 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     >
-   <TextView
+   <LinearLayout
        android:layout_width="match_parent"
-       android:layout_height="70dp"
-       android:id="@+id/content"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="10dp"
-       android:textSize="14dp"
-       android:textColorHint="@color/color_of_line"
-       android:hint="文章内容"
-       android:gravity="center"
-       android:background="@color/list_back"
-       android:textColor="@color/black"/>
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp">
+
+         <TextView
+             android:id="@+id/title_easy"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:gravity="center"
+             android:hint="题目"
+             android:textColorHint="@color/color_of_line"
+             android:textColor="@color/color_of_line"
+             android:textSize="12dp"
+             android:layout_alignParentStart="true" />
+         <TextView
+             android:id="@+id/time_show"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:gravity="center"
+             android:text="时间："
+             android:textColor="@color/color_of_line"
+             android:textSize="12dp"
+             android:layout_alignBottom="@+id/updated_time"
+             android:layout_toStartOf="@+id/updated_time" />
+         <TextView
+             android:id="@+id/updated_time"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:gravity="center"
+             android:hint="创建日期"
+             android:textColorHint="@color/color_of_line"
+             android:textColor="@color/color_of_line"
+             android:textSize="12dp"
+             android:layout_alignParentEnd="true" />
+      </RelativeLayout>
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="70dp"
+          android:id="@+id/content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginTop="3dp"
+          android:textSize="14dp"
+          android:textColorHint="@color/color_of_line"
+          android:hint="文章内容"
+          android:gravity="center"
+          android:background="@color/list_back"
+          android:textColor="@color/easy_content"/>
+
+   </LinearLayout>
+
 
 </LinearLayout>

@@ -111,13 +111,15 @@ public class EasyList extends Activity implements Button.OnClickListener{
             Easy easy = (Easy) iterator.next();
             item.put("content", easy.getContent());
             item.put("objectId", easy.getObjectId());
+            item.put("updatedAt", easy.getUpdatedAt());
+            item.put("title", easy.getTitle());
             //将item添加到data中
             data.add(item);
         }
         //创建SimpleAdapter适配器将数据绑定到query_catelog显示控件上，做好能够放在for循环的外边
         productAdapter = new SimpleAdapter(this, data, R.layout.easy_catalog,
-                new String[]{"content"},
-                new int[]{R.id.content});
+                new String[]{"content","title","updatedAt"},
+                new int[]{R.id.content,R.id.title_easy,R.id.updated_time});
         //实现列表的显示
         easyListView.setAdapter(productAdapter);
         productAdapter.notifyDataSetChanged();
@@ -208,7 +210,8 @@ public class EasyList extends Activity implements Button.OnClickListener{
         and.add(q1);
         //小于23：59：59
         BmobQuery<Easy> q2 = new BmobQuery<Easy>();
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        //hh表示12小时制，HH表示24小时制
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentTime = sDateFormat.format(new java.util.Date());
         String end = currentTime;
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -222,6 +225,7 @@ public class EasyList extends Activity implements Button.OnClickListener{
         and.add(q2);
         //添加复合与查询
         query.and(and);
+        query.setLimit(50);
         query.findObjects(new FindListener<Easy>() {
             @Override
             public void done(List<Easy> object, BmobException e) {
@@ -234,6 +238,8 @@ public class EasyList extends Activity implements Button.OnClickListener{
                         singleEasy.getObjectId();
                         //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
                         singleEasy.getCreatedAt();
+                        singleEasy.getUpdatedAt();
+                        singleEasy.getTitle();
                         //获得内容信息
                         singleEasy.getContent();
                         easyTemp.add(singleEasy);

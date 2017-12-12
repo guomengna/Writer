@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -51,6 +52,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     private EditText addneweasy;//编辑区域
     private TextView submit;//提交按钮
     private String content;//文章内容
+    private String title;//文章题目
     private ImageButton back;//返回按钮
     private int mImgViewWidth;
     private float mInsertedImgWidth;
@@ -116,15 +118,27 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         progressDialog = new ProgressDialog(AddNewEasyActivity.this);
         progressDialog.show();
         //收集文章的数据
-        content=addneweasy.getText().toString();
-        String content1 = addneweasy.getText().toString();
-//        Bundle data = new Bundle();
-//        Intent intent = new Intent(AddNewEasyActivity.this, DisPlay.class);
-//        data.putString("nei", content);
-//        intent.putExtra("neirong", data);
-//        startActivity(intent);
+        String contentTemp=addneweasy.getText().toString();
+        if(contentTemp.length()>30){
+            content=contentTemp.substring(0,30);
+        }else{
+            content=contentTemp;
+        }
+
+        //检测是否有换行，若有且换行时字符数量少于5则截止到换行为止
+        String titleTemp=content.substring(0,5);
+        String reg = "(?s)'.*'";
+        for(int i=0;i<titleTemp.length();i++){
+            if(titleTemp.substring(i,i+1).matches("(?s)'.*'")){
+                title=content.substring(0,i-1);
+                break;
+            }
+        }
+        title=content.substring(0,5);
+
         Easy easy=new Easy();
         easy.setContent(content);
+        easy.setTitle(title);
         easy.save(new SaveListener<String>() {
             @Override
             public void done(String objectId,BmobException e) {
