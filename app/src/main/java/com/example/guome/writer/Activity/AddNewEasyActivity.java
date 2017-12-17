@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.guome.writer.JavaBean.Easy;
+import com.example.guome.writer.MyTool.SQLiteHelper;
 import com.example.guome.writer.R;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,6 +64,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     ProgressDialog progressDialog;//进度显示框
     private String uplaodImg;
     private Uri uri;
+    private SQLiteHelper helper;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                 //调用提交方法,首先提交到本地数据库，再提交成功则跳转，否则显示失败，重新提交
                 //跳转到text view界面，不再可编辑
                 submit();
+                finish();
                 break;
             case R.id.fanhui:
                 //保存到本地，之后退出
@@ -118,23 +121,21 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         progressDialog = new ProgressDialog(AddNewEasyActivity.this);
         progressDialog.show();
         //收集文章的数据
-        String contentTemp=addneweasy.getText().toString();
-        if(contentTemp.length()>30){
-            content=contentTemp.substring(0,30);
-        }else{
-            content=contentTemp;
-        }
-
-        //检测是否有换行，若有且换行时字符数量少于5则截止到换行为止
-        String titleTemp=content.substring(0,5);
-        String reg = "(?s)'.*'";
-        for(int i=0;i<titleTemp.length();i++){
-            if(titleTemp.substring(i,i+1).matches("(?s)'.*'")){
-                title=content.substring(0,i-1);
-                break;
+        content=addneweasy.getText().toString();
+        if(content.length()>5){
+            //检测是否有换行，若有且换行时字符数量少于5则截止到换行为止
+            String titleTemp=content.substring(0,5);
+            for(int i=0;i<titleTemp.length();i++){
+                if(titleTemp.substring(i,i+1).equals("\n")){
+                    Toast.makeText(AddNewEasyActivity.this,"第"+i+"个是换行字符",Toast.LENGTH_SHORT).show();
+                    title=content.substring(0,i);
+                    Toast.makeText(AddNewEasyActivity.this,"title是"+title,Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
+        }else{
+            title=content;
         }
-        title=content.substring(0,5);
 
         Easy easy=new Easy();
         easy.setContent(content);
@@ -158,6 +159,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                                 Toast.makeText(AddNewEasyActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(AddNewEasyActivity.this,"图片上传失败",Toast.LENGTH_SHORT).show();
+                                helper.insert(title,content);
                             }
                         }
                         @Override
@@ -169,6 +171,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                     progressDialog.dismiss();
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                     Toast.makeText(AddNewEasyActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
+                    helper.insert(title,content);
                 }
             }
         });
@@ -382,5 +385,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
             return null;
         }
     }
+
+
 
 }

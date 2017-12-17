@@ -14,5 +14,6 @@
     <color name="black">#060606</color>
     <color name="green">#255f39</color>
     <color name="easy_content">#ffffff</color>
+    <color name="easy_detail">#292323</color>
 
 </resources>

@@ -35,6 +35,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by guome on 2017/12/6.
+ * 查询文章列表类，将所有的文章查询出来，按照更新时间从大到小排列
  */
 
 public class EasyList extends Activity implements Button.OnClickListener{
@@ -49,8 +50,8 @@ public class EasyList extends Activity implements Button.OnClickListener{
         easyListView = (ListView) findViewById(R.id.listView);
         back=findViewById(R.id.backa);
         back.setOnClickListener(this);
-        //queryEasy();
         queryByTime();
+        //点击事件监听，点击进入详情页
         easyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +64,7 @@ public class EasyList extends Activity implements Button.OnClickListener{
                 startActivity(intent);
             }
         });
+        //长按事件监听，长按删除
         easyListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
@@ -102,7 +104,7 @@ public class EasyList extends Activity implements Button.OnClickListener{
                 break;
         }
     }
-
+    //把查询到的数据显示在列表中
     public void show(List<Easy> easys){
         List<HashMap<String, Object>> data = new ArrayList<HashMap<String,Object>>();
 
@@ -142,15 +144,14 @@ public class EasyList extends Activity implements Button.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-//        String type=input_type.getText().toString();
-//        queryByType(type);
-        if(productAdapter!=null){
-            productAdapter.notifyDataSetChanged();
-        }
-        easy= DeleteSingleton.getInstance().getEasyList();
-        if(easy!=null){
-            show(easy);
-        }
+//        if(productAdapter!=null){
+//            productAdapter.notifyDataSetChanged();
+//        }
+//        easy= DeleteSingleton.getInstance().getEasyList();
+//        if(easy!=null){
+//            show(easy);
+//        }
+        queryByTime();
     }
     //查询不到内容,查询结果为0条，原因是模糊查询不能使用
     //理想方式应该是全部查出来，用时间，如方法queryByTime()所示
@@ -226,11 +227,13 @@ public class EasyList extends Activity implements Button.OnClickListener{
         //添加复合与查询
         query.and(and);
         query.setLimit(50);
+        //按照最后更新时间的降序排列
+        query.order("-updatedAt");
         query.findObjects(new FindListener<Easy>() {
             @Override
             public void done(List<Easy> object, BmobException e) {
                 if(e==null){
-                    Toast.makeText(EasyList.this,"查询成功，共"+object.size()+"条数据",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(EasyList.this,"查询成功，共"+object.size()+"条数据",Toast.LENGTH_SHORT).show();
                     //临时list用于存放查询到的文章
                     List<Easy> easyTemp=new ArrayList<Easy>();
                     for (Easy singleEasy : object) {
@@ -247,9 +250,10 @@ public class EasyList extends Activity implements Button.OnClickListener{
                     //将临时list的值赋给easy，用于显示出来
                     easy=easyTemp;
                     if(easy!=null){
-                        Toast.makeText(EasyList.this,"easy+"+easy.size(),Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(EasyList.this,"easy+"+easy.size(),Toast.LENGTH_SHORT).show();
                         DeleteSingleton.getInstance().setEasyList(easy);
                         show(easy);
+                        productAdapter.notifyDataSetChanged();
                     }
                 }else{
                     Toast.makeText(EasyList.this,"查询失败",Toast.LENGTH_SHORT).show();
@@ -257,5 +261,11 @@ public class EasyList extends Activity implements Button.OnClickListener{
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        queryByTime();
     }
 }
