@@ -188,4 +188,52 @@
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
         android:background="@color/color_of_line" />
+    <RelativeLayout
+        android:id="@+id/localwenzhang_enter"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:onClick="onClick">
+
+        <ImageView
+            android:id="@+id/localwenzhang_pic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:background="@mipmap/wenzhang" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginLeft="60dp"
+            android:gravity="center_vertical"
+            android:text="文章"
+            android:textColor="@color/green" />
+
+        <TextView
+            android:id="@+id/localnumber_wenzhang"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:text="数量"
+            android:textColor="@color/green"
+            android:layout_toStartOf="@+id/localenter_pic_wenzhang" />
+
+        <ImageView
+            android:id="@+id/localenter_pic_wenzhang"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:background="@mipmap/enter" />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_of_line" />
 </LinearLayout>

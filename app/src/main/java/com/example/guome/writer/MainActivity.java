@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.guome.writer.Activity.AddNewEasyActivity;
 import com.example.guome.writer.Activity.EasyList;
 import com.example.guome.writer.Activity.LiwenList;
+import com.example.guome.writer.Activity.LocalEasyList;
 import com.example.guome.writer.Activity.PersonInformationActivity;
 import com.example.guome.writer.JavaBean.Easy;
 
@@ -35,9 +36,9 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     CircleImageView touxiang;
     TextView zhuanlan;
     ImageView bianxie,tongbu;
-    RelativeLayout enterLiwen,enterWenzhang;
-    TextView counterEasy;
-    private int counterOfEasy;
+    RelativeLayout enterLiwen,enterWenzhang,enterlocalwenzhang;
+    TextView counterEasy,counterLocalEasy;
+    private int counterOfEasy,counterofLocalEasy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +55,12 @@ public class MainActivity extends Activity implements Button.OnClickListener{
         enterLiwen.setOnClickListener(this);
         enterWenzhang=findViewById(R.id.wenzhang_enter);
         enterWenzhang.setOnClickListener(this);
-        counterEasy=findViewById(R.id.number_wenzhang);
-        queryEasyCount();
+        counterEasy=findViewById(R.id.number_wenzhang);//上传成功的文章数量
+        counterLocalEasy=findViewById(R.id.localnumber_wenzhang);//本地文章的数量
+        enterlocalwenzhang=findViewById(R.id.localwenzhang_enter);//本地文章入口
+        enterlocalwenzhang.setOnClickListener(this);//设置本地文章按钮动作
+        queryEasyCount();//查询上传成功的文章数量，并显示出来
+        queryLocalEasyCount();//查询本地文章数量，并显示出来
     }
 
     @Override
@@ -87,6 +92,11 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 Intent intentEasyList=new Intent();
                 intentEasyList.setClass(MainActivity.this, EasyList.class);
                 startActivity(intentEasyList);
+                break;
+            case R.id.localwenzhang_enter:
+                Intent intentLocalEasyList=new Intent();
+                intentLocalEasyList.setClass(MainActivity.this, LocalEasyList.class);
+                startActivity(intentLocalEasyList);
                 break;
         }
     }
@@ -135,6 +145,11 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 }
             }
         });
+    }
+
+    //查询本地数据库中文章的数量，并显示出来
+    public void queryLocalEasyCount(){
+        //查询方法体
     }
 
     @Override
