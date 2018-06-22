@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,6 +34,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.example.guome.writer.http.HttpUtils.getAllEasys;
+import static com.example.guome.writer.http.HttpUtils.getAllEasysJson;
+
 /**
  * Created by guome on 2017/12/6.
  * 查询文章列表类，将所有的文章查询出来，按照更新时间从大到小排列
@@ -47,10 +51,18 @@ public class EasyList extends Activity implements Button.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.easylist_layout);
+        //增加访问web的权限
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         easyListView = (ListView) findViewById(R.id.listView);
         back=findViewById(R.id.backa);
         back.setOnClickListener(this);
         queryByTime();
+        //接口测试,接口测试成功，可以获取到数据
+        List<Easy> testEasyList=getAllEasys();
+        Toast.makeText(EasyList.this,"json is"+getAllEasysJson().toString(),Toast.LENGTH_LONG).show();
+        Toast.makeText(EasyList.this,"easylist's size is"+testEasyList.size(),Toast.LENGTH_SHORT).show();
         //点击事件监听，点击进入详情页
         easyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

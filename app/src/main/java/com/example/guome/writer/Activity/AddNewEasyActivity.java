@@ -42,6 +42,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by guome on 2017/10/9.
+ * 图片上传先注释掉，并不能获取和上传图片
  */
 
 /**
@@ -64,7 +65,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     ProgressDialog progressDialog;//进度显示框
     private String uplaodImg;
     private Uri uri;
-    private SQLiteHelper helper;
+    private SQLiteHelper helper=new SQLiteHelper(this);
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +132,8 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                     title=content.substring(0,i);
                     Toast.makeText(AddNewEasyActivity.this,"title是"+title,Toast.LENGTH_SHORT).show();
                     break;
+                }else{
+                    title=titleTemp;
                 }
             }
         }else{
@@ -148,6 +151,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                     Toast.makeText(AddNewEasyActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
                     //提交图片的方法，放在文章上传成功之中
                     //图片路径
+                    /*
                     String picPath = getRealFilePath(AddNewEasyActivity.this,uri);
                     String picstr="storage/1EF9-1702/DCIM/Camera/IMG_20171028_175422.jpg";
                     File file =new File(picPath);
@@ -167,6 +171,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                             // 返回的上传进度（百分比）
                         }
                     });
+                    */
                 }else{
                     progressDialog.dismiss();
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());

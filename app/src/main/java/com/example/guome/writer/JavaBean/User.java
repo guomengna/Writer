@@ -6,5 +6,4 @@ import cn.bmob.v3.BmobUser;
  * Created by guome on 2017/9/25.
  */
 public class User extends BmobUser {
-
 }

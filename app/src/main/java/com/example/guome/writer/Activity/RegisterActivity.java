@@ -47,7 +47,7 @@ public class RegisterActivity extends Activity {
     private String password;
     private String email;
     private TextView title;
-    private User newuser;
+    private User newUser=new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,22 +82,22 @@ public class RegisterActivity extends Activity {
     public void register(){
         username = register_inputUsername.getText().toString();
         password = register_inputPassword.getText().toString();
-        email = register_inputEmail.getText().toString();
-        if(!isEmail(email)){
-            Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
-        }else{
-        }
-        newuser.setUsername(username);
-        newuser.setPassword(password);
-        newuser.setEmail(email);
+        //email = register_inputEmail.getText().toString();
+//        if(!isEmail(email)){
+//            Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
+//        }else{
+//        }
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        //newUser.setEmail(email);
         //验证是否为空
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)||TextUtils.isEmpty(str)) {
-            Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)||TextUtils.isEmpty(str)) {
+//            Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         //调用signUp接口注册
-        newuser.signUp(new SaveListener<User>() {
+        newUser.signUp(new SaveListener<User>() {
             @Override
             public void done(User s, BmobException e) {
                 if(e==null){
