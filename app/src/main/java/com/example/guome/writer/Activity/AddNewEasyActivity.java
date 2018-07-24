@@ -40,6 +40,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
+import static com.example.guome.writer.http.HttpUtils.getAllEasysJson;
+
 /**
  * Created by guome on 2017/10/9.
  * 图片上传先注释掉，并不能获取和上传图片
@@ -79,7 +81,6 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         cancel_btn=findViewById(R.id.cancel_btn);
         choose_pic_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
-
         vto = addneweasy.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

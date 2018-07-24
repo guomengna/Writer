@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
@@ -39,10 +40,13 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     RelativeLayout enterLiwen,enterWenzhang,enterlocalwenzhang;
     TextView counterEasy,counterLocalEasy;
     private int counterOfEasy,counterofLocalEasy;
+    private String ApplicationID="933f9a1decf27d18db673da059d2d861";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //初始化BOMB
+        Bmob.initialize(this, ApplicationID);
         touxiang= (CircleImageView) findViewById(R.id.touxiang);
         touxiang.setOnClickListener(this);
         zhuanlan=(TextView) findViewById(R.id.zhuanlan);

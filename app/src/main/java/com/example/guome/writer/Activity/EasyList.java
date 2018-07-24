@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -15,10 +17,16 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.MyTool.DeleteSingleton;
 import com.example.guome.writer.R;
+import com.example.guome.writer.server.WebServer;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +41,8 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static com.example.guome.writer.http.HttpUtils.getAllEasys;
 import static com.example.guome.writer.http.HttpUtils.getAllEasysJson;
@@ -47,22 +57,48 @@ public class EasyList extends Activity implements Button.OnClickListener{
     private Button back;
     private SimpleAdapter productAdapter;
     private List<Easy> easy=new ArrayList<Easy>();
+    private Handler handler=new Handler();
+    List<Easy> easyList1=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.easylist_layout);
-        //增加访问web的权限
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        //增加访问web的权限，不推荐使用
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
 
         easyListView = (ListView) findViewById(R.id.listView);
         back=findViewById(R.id.backa);
         back.setOnClickListener(this);
         queryByTime();
+        //访问网络，获取nana的所有文章
+        try {
+            WebServer.getWebServer().getEasysByAuthor(getAllEasyCallBack);
+            Toast.makeText(EasyList.this,"This is EasyList.class,try to get easy by nana",Toast.LENGTH_LONG).show();
+        } catch (android.net.ParseException e) {
+            e.printStackTrace();
+        }
+        //开启新线程，进行网络请求，主线程虽说运行正确，但是网络访问失败
+//        new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                List<Easy> testEasyList=getAllEasys();
+//                if(testEasyList.size()!=0){
+//                    Toast.makeText(EasyList.this,"easylist's size is"+testEasyList.size(),Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(EasyList.this,"easy size is 0",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }).start();
         //接口测试,接口测试成功，可以获取到数据
-        List<Easy> testEasyList=getAllEasys();
-        Toast.makeText(EasyList.this,"json is"+getAllEasysJson().toString(),Toast.LENGTH_LONG).show();
-        Toast.makeText(EasyList.this,"easylist's size is"+testEasyList.size(),Toast.LENGTH_SHORT).show();
+//        new Thread(runnable).start();
+//        List<Easy> testEasyList=getAllEasys();
+//        if(testEasyList.size()!=0){
+//            Toast.makeText(EasyList.this,"easylist's size is"+testEasyList.size(),Toast.LENGTH_SHORT).show();
+//        }else{
+//            Toast.makeText(EasyList.this,"easy size is 0",Toast.LENGTH_LONG).show();
+//        }
+
         //点击事件监听，点击进入详情页
         easyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,6 +144,58 @@ public class EasyList extends Activity implements Button.OnClickListener{
             }
         });
     }
+    okhttp3.Callback getAllEasyCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            List<Easy> easyList=new ArrayList<>();
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                JSONArray getEasy_returns = new JSONArray(jsonObject.getString("getEasy_returns"));
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    for (int i = 0; i < getEasy_returns.length(); i++) {
+                        JSONObject jsonObject1 = getEasy_returns.getJSONObject(i);
+                        //JSONObject jsonObject=jsonArray.getJSONObject(i);
+                        //if(getEasy_returns!=null){
+                        int id = Integer.parseInt(jsonObject1.getString("id"));
+                        String title = jsonObject1.getString("title");
+                        String content = jsonObject1.getString("content");
+                        String createData = jsonObject1.getString("createData");
+                        String updateData = jsonObject1.getString("updateData");
+                        String author = jsonObject1.getString("author");
+
+                        //封装成Easy对象
+                        Easy easy = new Easy();
+                        easy.setContent(content);
+                        easy.setTitle(title);
+                        easy.setId(id);
+                        easy.setCreatedAt(createData);
+                        easy.setUpdatedAt(updateData);
+                        easy.setAuthor(author);
+                        System.out.println("easy title is" + title + " and content is " + content);
+                        easyList.add(easy);
+//                        Toast.makeText(EasyList.this, "easylist's size is"+ easyList.size(), Toast.LENGTH_SHORT).show();
+                    }
+                    easyList1=easyList;
+//                    Toast.makeText(EasyList.this, "easylist's size is"+ easyList.size(), Toast.LENGTH_SHORT).show();
+                }
+            }catch(Exception e){
+
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    Toast.makeText(EasyList.this, "获取成功,easyList1's size is"+easyList1.size(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
