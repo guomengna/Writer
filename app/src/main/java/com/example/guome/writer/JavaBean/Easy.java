@@ -9,11 +9,13 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by guome on 2017/10/11.
  */
 
-public class Easy extends BmobObject{
+public class Easy{
     private String content;
     private String title;
     private int id;
     private String author;
+    private String createData;
+    private String updateData;
     public void setContent(String content) {
         this.content = content;
     }
@@ -27,36 +29,6 @@ public class Easy extends BmobObject{
 
     public String getContent() {
         return content;
-    }
-
-    @Override
-    public void setCreatedAt(String createdAt) {
-        super.setCreatedAt(createdAt);
-    }
-
-    @Override
-    public void setUpdatedAt(String updatedAt) {
-        super.setUpdatedAt(updatedAt);
-    }
-
-    @Override
-    public void setObjectId(String objectId) {
-        super.setObjectId(objectId);
-    }
-
-    @Override
-    public String getCreatedAt() {
-        return super.getCreatedAt();
-    }
-
-    @Override
-    public String getObjectId() {
-        return super.getObjectId();
-    }
-
-    @Override
-    public String getUpdatedAt() {
-        return super.getUpdatedAt();
     }
 
     public void setId(int id) {
@@ -73,5 +45,21 @@ public class Easy extends BmobObject{
 
     public String getAuthor() {
         return author;
+    }
+
+    public void setCreateData(String createData) {
+        this.createData = createData;
+    }
+
+    public void setUpdateData(String updateData) {
+        this.updateData = updateData;
+    }
+
+    public String getCreateData() {
+        return createData;
+    }
+
+    public String getUpdateData() {
+        return updateData;
     }
 }

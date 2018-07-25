@@ -33,13 +33,75 @@ public class WebServer {
         }
         return webServer;
     }
-    public void getEasysByAuthor(okhttp3.Callback requestCallBack) {
+
+    /**
+     * 获取所有文档
+     * @param requestCallBack
+     */
+    public void getAllEasys(okhttp3.Callback requestCallBack) {
         RequestBody body = new FormBody.Builder()
 //                .add("author", author + "")
                 .build();
 
         Request request = new Request.Builder()
                 .url("http://192.168.1.111:80/easymanagement/getAllEasys")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 根据作者的姓名获取本作者的全部文章
+     * @param author
+     * @param requestCallBack
+     */
+    public void getEasysByAuthor(String author,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("author", author + "")
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/getEasysByAuthor")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 按照文章的id查询某一篇文章
+     * @param id
+     * @param requestCallBack
+     */
+    public void findByEasyId(int id,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("id", id + "")
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/findByEasyId")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 根据文章id删除一篇文章
+     * @param
+     * @param requestCallBack
+     */
+    public void deleteEasyById(int id,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("id", id + "")
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/deleteEasyById")
                 .post(body)
                 .build();
 

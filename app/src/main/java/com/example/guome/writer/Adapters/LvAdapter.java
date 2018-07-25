@@ -65,7 +65,7 @@ public class LvAdapter extends BaseAdapter {
             vh = (Viewholder)convertView.getTag();
         }
         vh.tv_content.setText(localEasyList.get(position).getContent());
-        vh.tv_updatedTime.setText(localEasyList.get(position).getUpdatedAt());
+        vh.tv_updatedTime.setText(localEasyList.get(position).getUpdateData());
         vh.tv_titleEeasy.setText(localEasyList.get(position).getTitle());
 
         return convertView;

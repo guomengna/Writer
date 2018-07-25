@@ -68,8 +68,8 @@ public class HttpUtils {
                         easy.setContent(content);
                         easy.setTitle(title);
                         easy.setId(id);
-                        easy.setCreatedAt(createData);
-                        easy.setUpdatedAt(updateData);
+                        easy.setCreateData(createData);
+                        easy.setUpdateData(updateData);
                         easy.setAuthor(author);
                         System.out.println("easy title is" + title + " and content is " + content);
                         easyList.add(easy);

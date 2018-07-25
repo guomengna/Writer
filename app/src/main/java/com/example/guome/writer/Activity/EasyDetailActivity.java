@@ -165,39 +165,39 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
             Easy easy=new Easy();
             easy.setContent(content);
             easy.setTitle(title);
-            easy.update(objectId, new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-                    if(e==null){
-                        progressDialog.dismiss();
-                        Toast.makeText(EasyDetailActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
-                        //提交图片的方法，放在文章上传成功之中
-                        //图片路径
-                        String picPath = getRealFilePath(EasyDetailActivity.this,uri);
-                        String picstr="storage/1EF9-1702/DCIM/Camera/IMG_20171028_175422.jpg";
-                        File file =new File(picPath);
-                        BmobFile bmobFile = new BmobFile(file);//停在这一步，为什么？？？
-                        bmobFile.uploadblock(new UploadFileListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(e==null){
-                                    Toast.makeText(EasyDetailActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Toast.makeText(EasyDetailActivity.this,"图片上传失败",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            @Override
-                            public void onProgress(Integer value) {
-                                // 返回的上传进度（百分比）
-                            }
-                        });
-                    }else{
-                        progressDialog.dismiss();
-                        Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
-                        Toast.makeText(EasyDetailActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            easy.update(objectId, new UpdateListener() {
+//                @Override
+//                public void done(BmobException e) {
+//                    if(e==null){
+//                        progressDialog.dismiss();
+//                        Toast.makeText(EasyDetailActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
+//                        //提交图片的方法，放在文章上传成功之中
+//                        //图片路径
+//                        String picPath = getRealFilePath(EasyDetailActivity.this,uri);
+//                        String picstr="storage/1EF9-1702/DCIM/Camera/IMG_20171028_175422.jpg";
+//                        File file =new File(picPath);
+//                        BmobFile bmobFile = new BmobFile(file);//停在这一步，为什么？？？
+//                        bmobFile.uploadblock(new UploadFileListener() {
+//                            @Override
+//                            public void done(BmobException e) {
+//                                if(e==null){
+//                                    Toast.makeText(EasyDetailActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
+//                                }else{
+//                                    Toast.makeText(EasyDetailActivity.this,"图片上传失败",Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                            @Override
+//                            public void onProgress(Integer value) {
+//                                // 返回的上传进度（百分比）
+//                            }
+//                        });
+//                    }else{
+//                        progressDialog.dismiss();
+//                        Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+//                        Toast.makeText(EasyDetailActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
     }
 
 }
