@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,11 +15,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.MyTool.MyTextView;
 import com.example.guome.writer.R;
+import com.example.guome.writer.server.WebServer;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
@@ -27,6 +35,8 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static com.example.guome.writer.Activity.AddNewEasyActivity.getRealFilePath;
 
@@ -36,6 +46,7 @@ import static com.example.guome.writer.Activity.AddNewEasyActivity.getRealFilePa
 
 public class EasyDetailActivity extends Activity implements View.OnClickListener {
     private String objectId;
+    private int id;
     private EditText easy_editText;
     private int count = 0;
     private int firClick = 0;
@@ -46,36 +57,88 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
     private String title;
     private Uri uri;
     private TextView submitTextView;
+    private Handler handler=new Handler();
+    private Easy easyById=new Easy();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.easy_detail_layout);
-        objectId=getIntent().getStringExtra("objectId");
+//        objectId=getIntent().getStringExtra("objectId");
+        id=Integer.parseInt(getIntent().getStringExtra("id"));
         easy_editText=findViewById(R.id.easy);
 //        easy_editText.setEnabled(false);
         easy_editText.setFocusable(false);
         easy_editText.setOnClickListener(this);
         submitTextView=findViewById(R.id.submit);
         submitTextView.setOnClickListener(this);
-        queryById();
-
+//        queryById();
+        getEasyById();
     }
-    public void queryById(){
-        BmobQuery<Easy> query = new BmobQuery<Easy>();
-        query.getObject(objectId, new QueryListener<Easy>() {
+    public void getEasyById(){
+        Toast.makeText(EasyDetailActivity.this,"id="+id,Toast.LENGTH_SHORT).show();
+        WebServer.getWebServer().findByEasyId(id,getEasyByIdCallBack);
+    }
+    //获取该ID的文章，并把内容显示出来
+    okhttp3.Callback getEasyByIdCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+//                JSONArray getEasy_returns = new JSONArray(jsonObject.getString("getEasy_returns"));
+                String re=jsonObject.getString("result");
+                com.alibaba.fastjson.JSONObject getEasy=jsonObject.getJSONObject("getEasy_returns");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                        //JSONObject jsonObject=jsonArray.getJSONObject(i);
+                        //if(getEasy_returns!=null){
+                        int id = Integer.parseInt(getEasy.getString("id"));
+                        String title = getEasy.getString("title");
+                        String content = getEasy.getString("content");
+                        String createData = getEasy.getString("createData");
+                        String updateData = getEasy.getString("updateData");
+                        String author = getEasy.getString("author");
 
-            @Override
-            public void done(Easy object, BmobException e) {
-                if(e==null){
-                    //获得playerName的信息
-                    easy_editText.setText(object.getContent());
-                    Toast.makeText(EasyDetailActivity.this,"查询成功",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(EasyDetailActivity.this,"查询失败"+e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
+                        //封装成Easy对象
+                        Easy easy = new Easy();
+                        easy.setContent(content);
+                        easy.setTitle(title);
+                        easy.setId(id);
+                        easy.setCreateData(createData);
+                        easy.setUpdateData(updateData);
+                        easy.setAuthor(author);
+                        System.out.println("easy title is" + title + " and content is " + content);
+                        easy_editText.setText(easy.getContent().toString());
+                    }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
             }
-        });
-    }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(EasyDetailActivity.this,easy_editText.getText().toString(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+//    public void queryById(){
+//        BmobQuery<Easy> query = new BmobQuery<Easy>();
+//        query.getObject(objectId, new QueryListener<Easy>() {
+//
+//            @Override
+//            public void done(Easy object, BmobException e) {
+//                if(e==null){
+//                    //获得playerName的信息
+//                    easy_editText.setText(object.getContent());
+//                    Toast.makeText(EasyDetailActivity.this,"查询成功",Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(EasyDetailActivity.this,"查询失败"+e.getMessage(),Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
     //双击编辑事件
     public boolean onTouch(View v, MotionEvent event) {
         Toast.makeText(EasyDetailActivity.this,"双击方法",Toast.LENGTH_SHORT).show();

@@ -9,4 +9,10 @@
     <string name="password">密码</string>
     <string name="register">注册</string>
     <string name="welcome">writer</string>
+    <string name="pull_to_refresh_pull_label">下拉刷新......</string>
+    <string name="pull_to_refresh_release_label">松开后刷新......</string>
+    <string name="pull_to_refresh_refreshing_label">正在刷新......</string>
+    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
+    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
+    <string name="pull_to_refresh_footer_refreshing_label">加载中......</string>
 </resources>
