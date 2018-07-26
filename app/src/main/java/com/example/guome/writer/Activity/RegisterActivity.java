@@ -63,12 +63,12 @@ public class RegisterActivity extends Activity {
         //register_inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);//限制只能输入邮箱地址
         register_submit = (Button) findViewById(R.id.register_submit);
         //register_submit.getBackground().setAlpha(100);
-        register_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                register();
-            }
-        });
+//        register_submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                register();
+//            }
+//        });
         title = (TextView) findViewById(R.id.titleTv);
         title.setText("用户注册");
         findViewById(R.id.backa).setOnClickListener(new View.OnClickListener() {
@@ -79,35 +79,35 @@ public class RegisterActivity extends Activity {
         });
     }
     //注册方法
-    public void register(){
-        username = register_inputUsername.getText().toString();
-        password = register_inputPassword.getText().toString();
-        //email = register_inputEmail.getText().toString();
-//        if(!isEmail(email)){
-//            Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
-//        }else{
-//        }
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        //newUser.setEmail(email);
-        //验证是否为空
-//        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)||TextUtils.isEmpty(str)) {
-//            Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
-        //调用signUp接口注册
-        newUser.signUp(new SaveListener<User>() {
-            @Override
-            public void done(User s, BmobException e) {
-                if(e==null){
-                    Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+//    public void register(){
+//        username = register_inputUsername.getText().toString();
+//        password = register_inputPassword.getText().toString();
+//        //email = register_inputEmail.getText().toString();
+////        if(!isEmail(email)){
+////            Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
+////        }else{
+////        }
+//        newUser.setUsername(username);
+//        newUser.setPassword(password);
+//        //newUser.setEmail(email);
+//        //验证是否为空
+////        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)||TextUtils.isEmpty(str)) {
+////            Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
+////            return;
+////        }
+//
+//        //调用signUp接口注册
+//        newUser.signUp(new SaveListener<User>() {
+//            @Override
+//            public void done(User s, BmobException e) {
+//                if(e==null){
+//                    Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
     //判断邮箱格式
     public boolean isEmail(String email) {
         String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";

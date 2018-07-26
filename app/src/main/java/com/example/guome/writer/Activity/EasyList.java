@@ -155,7 +155,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
         WebServer.getWebServer().getAllEasys(getAllEasyCallBack);
         //根据作者名称获取该作者的所有文章
 //            WebServer.getWebServer().getEasysByAuthor("nana",getEasyByAuthorCallBack);
-        Toast.makeText(EasyList.this,"This is EasyList.class,try to get easy by nana",Toast.LENGTH_LONG).show();
+//        Toast.makeText(EasyList.this,"This is EasyList.class,try to get easy by nana",Toast.LENGTH_LONG).show();
     }
     //初次获取数据
     okhttp3.Callback getAllEasyCallBack=new okhttp3.Callback() {
@@ -192,10 +192,8 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
                         easy.setAuthor(author);
                         System.out.println("easy title is" + title + " and content is " + content);
                         easyList.add(easy);
-//                        Toast.makeText(EasyList.this, "easylist's size is"+ easyList.size(), Toast.LENGTH_SHORT).show();
                     }
                     easyList1=easyList;
-//                    Toast.makeText(EasyList.this, "easylist's size is"+ easyList.size(), Toast.LENGTH_SHORT).show();
                 }
             }catch(Exception e){
 
@@ -209,8 +207,6 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
                     easyListAdapter = new EasyListAdapter(getApplication(),easyList1);
                     //将adapter添加到listview中
                     easyListView.setAdapter(easyListAdapter);
-
-//                    Toast.makeText(EasyList.this, "获取成功,easyList1's size is"+easyList1.size(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

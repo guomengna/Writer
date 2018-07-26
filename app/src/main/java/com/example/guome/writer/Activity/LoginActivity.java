@@ -10,7 +10,9 @@ package com.example.guome.writer.Activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.ParseException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.JavaBean.User;
 import com.example.guome.writer.JavaBean.WriterUser;
 import com.example.guome.writer.MainActivity;
@@ -34,7 +38,14 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
+import okhttp3.Call;
+import okhttp3.Response;
+
 import com.example.guome.writer.MainActivity;
+import com.example.guome.writer.app.MyApplication;
+import com.example.guome.writer.server.WebServer;
+
+import java.io.IOException;
 
 import static android.R.attr.tag;
 
@@ -57,6 +68,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private String password;
     private final WriterUser writerUser=new WriterUser();
     private final BmobUser bmobUser=new BmobUser();
+    private Handler handler=new Handler();
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +83,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginIn.setOnClickListener(this);
         register.setOnClickListener(this);
         reset_psw.setOnClickListener(this);
+        progressDialog=new ProgressDialog(LoginActivity.this);
     }
     @Override
     public void onClick(View v) {
@@ -78,8 +92,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 managerLogin();
                 break;
             case R.id.register:
-                register();
-                break;
+//                register();
+//                break;
 //            case R.id.reset_psw:
 //                Intent intent=new Intent(this,EmailChangePwd.class);
 //                startActivity(intent);
@@ -88,7 +102,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     public void managerLogin() {
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+
         progressDialog.setMessage("登录中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
@@ -98,35 +112,156 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        bmobUser.setUsername(username);
-        bmobUser.setPassword(password);
-        loginIn.setEnabled(false);
-        bmobUser.login(new SaveListener<BmobUser>() {
-            @Override
-            public void done(BmobUser user, BmobException e) {
-                if(e==null){
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(LoginActivity.this, writerUser.getUsername(), Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(LoginActivity.this, writerUser.getPassword(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-//                    WriterUser currentUser = BmobUser.getCurrentUser(WriterUser.class);
-                }else{
-                    progressDialog.dismiss();
-                    loginIn.setEnabled(true);
-                    Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(LoginActivity.this, bmobUser.getUsername(), Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(LoginActivity.this, bmobUser.getPassword(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        try {
+            WebServer.getWebServer().login(username,password,loginCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        bmobUser.setUsername(username);
+//        bmobUser.setPassword(password);
+//        loginIn.setEnabled(false);
+//        bmobUser.login(new SaveListener<BmobUser>() {
+//            @Override
+//            public void done(BmobUser user, BmobException e) {
+//                if(e==null){
+//                    progressDialog.dismiss();
+//                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(LoginActivity.this, writerUser.getUsername(), Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(LoginActivity.this, writerUser.getPassword(), Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                    startActivity(intent);
+////                    WriterUser currentUser = BmobUser.getCurrentUser(WriterUser.class);
+//                }else{
+//                    progressDialog.dismiss();
+//                    loginIn.setEnabled(true);
+//                    Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, bmobUser.getUsername(), Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(LoginActivity.this, bmobUser.getPassword(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
+
+    /**
+     * 登录的回调方法
+     */
+    okhttp3.Callback loginCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                 @Override
+                 public void run() {
+                     progressDialog.dismiss();
+                     Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                 }
+             }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("登录成功");
+                }else{
+                    System.out.print("登录失败");
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent loginIntent=new Intent();
+                    loginIntent.setClass(LoginActivity.this,MainActivity.class);
+                    startActivity(loginIntent);
+                    Toast.makeText(LoginActivity.this,
+                            "登录成功", Toast.LENGTH_SHORT).show();
+                    keepLoginUser();
+                }
+            });
+        }
+    };
+
+    /**
+     * 获取登录的用户，封装成对象保存
+     * 还没有经过测试
+     */
+    public void keepLoginUser(){
+        try {
+            WebServer.getWebServer().getLoginUser(username,password,getloginUserCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 获取当前登录的用户的回调方法
+     */
+    okhttp3.Callback getloginUserCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                     @Override
+                     public void run() {
+                         Toast.makeText(LoginActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
+                     }
+                 }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                com.alibaba.fastjson.JSONObject getUser=jsonObject.getJSONObject("readerUser_returns");
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("获取成功");
+                    int id = Integer.parseInt(getUser.getString("id"));
+                    String username = getUser.getString("username");
+                    String password = getUser.getString("password");
+                    String email = getUser.getString("email");
+                    //封装成User对象
+                    User user = new User();
+                    user.setUsername(username);
+                    user.setId(id);
+                    user.setPassword(password);
+                    user.setEmail(email);
+                    MyApplication.put("user", user);
+                }else{
+                    System.out.print("获取失败");
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LoginActivity.this,
+                            "获取成功", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+    //跳转到注册界面
     public void register() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * 重写返回键
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode,KeyEvent event){
         if (keyCode == KeyEvent.KEYCODE_BACK) {

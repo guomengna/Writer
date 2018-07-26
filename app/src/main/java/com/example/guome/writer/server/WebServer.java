@@ -1,5 +1,7 @@
 package com.example.guome.writer.server;
 
+import com.example.guome.writer.JavaBean.Easy;
+
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -102,6 +104,75 @@ public class WebServer {
 
         Request request = new Request.Builder()
                 .url("http://192.168.1.111:80/easymanagement/deleteEasyById")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     *
+     * @param title
+     * @param content
+     * @param author
+     * @param createData
+     * @param updateData
+     * @param requestCallBack
+     */
+    public void addEasy(String title,String content,String author,String createData,String updateData, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("title", title )
+                .add("content", content )
+                .add("author", author )
+                .add("createData", createData )
+                .add("updateData", updateData )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/addEasy")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @param requestCallBack
+     */
+    public void login(String username,String password, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("username", username )
+                .add("password", password )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/login")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 获取当前登录的用户
+     * @param username
+     * @param password
+     * @param requestCallBack
+     */
+    public void getLoginUser(String username,String password, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("username", username )
+                .add("password", password )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/getLoginUser")
                 .post(body)
                 .build();
 

@@ -30,20 +30,29 @@ public class IndexActivity extends Activity{
         //初始化BOMB
         Bmob.initialize(this, ApplicationID);
 
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //获得当前缓存的用户，若是存在就不用再次登录了。
+//                User user = BmobUser.getCurrentUser(User.class);
+//                if(user != null){
+//                    // 允许用户使用应用
+//                    Intent intent = new Intent(IndexActivity.this, MainActivity.class);
+//                    IndexActivity.this.startActivity(intent);
+//                }else{
+//                    //缓存用户对象为空时， 可打开用户注册界面…
+//                    Intent intent = new Intent(IndexActivity.this, LoginActivity.class);
+//                    IndexActivity.this.startActivity(intent);
+//                }
+//                IndexActivity.this.finish();
+//            }
+//        }, 3000); //三秒
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //获得当前缓存的用户，若是存在就不用再次登录了。
-                User user = BmobUser.getCurrentUser(User.class);
-                if(user != null){
-                    // 允许用户使用应用
-                    Intent intent = new Intent(IndexActivity.this, MainActivity.class);
-                    IndexActivity.this.startActivity(intent);
-                }else{
-                    //缓存用户对象为空时， 可打开用户注册界面…
-                    Intent intent = new Intent(IndexActivity.this, LoginActivity.class);
-                    IndexActivity.this.startActivity(intent);
-                }
+                //缓存用户对象为空时， 可打开用户注册界面…
+                Intent intent = new Intent(IndexActivity.this, LoginActivity.class);
+                IndexActivity.this.startActivity(intent);
                 IndexActivity.this.finish();
             }
         }, 3000); //三秒

@@ -9,8 +9,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -29,16 +31,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.MyTool.SQLiteHelper;
 import com.example.guome.writer.R;
+import com.example.guome.writer.server.WebServer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static com.example.guome.writer.http.HttpUtils.getAllEasysJson;
 
@@ -57,6 +68,9 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     private TextView submit;//提交按钮
     private String content;//文章内容
     private String title;//文章题目
+    private String createData;//文章创建时间
+    private String updateData;//文章更新时间
+    private String author;//文章创建作者
     private ImageButton back;//返回按钮
     private int mImgViewWidth;
     private float mInsertedImgWidth;
@@ -64,10 +78,11 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     private ImageButton choose_pic_btn;
     private ImageButton cancel_btn;
     ProgressBar progressBar;
-    ProgressDialog progressDialog;//进度显示框
+    private ProgressDialog progressDialog;//进度显示框
     private String uplaodImg;
     private Uri uri;
     private SQLiteHelper helper=new SQLiteHelper(this);
+    private Handler handler=new Handler();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +114,8 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
                 //调用提交方法,首先提交到本地数据库，再提交成功则跳转，否则显示失败，重新提交
                 //跳转到text view界面，不再可编辑
                 submit();
-                finish();
+//                finish();
+
                 break;
             case R.id.fanhui:
                 //保存到本地，之后退出
@@ -140,10 +156,24 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         }else{
             title=content;
         }
+        createData=getCurrentTime().toString();
+        updateData=getCurrentTime().toString();
 
-        Easy easy=new Easy();
-        easy.setContent(content);
-        easy.setTitle(title);
+        //获取当前登录的作者名
+        author="nana";
+//        //封装进Easy对象中
+//        Easy easy=new Easy();
+//        easy.setContent(content);
+//        easy.setTitle(title);
+//        easy.setCreateData(getCurrentTime().toString());
+//        easy.setUpdateData(getCurrentTime().toString());
+//        easy.setAuthor("nana");
+        try {
+            WebServer.getWebServer().addEasy(title,content,author,createData,updateData,addEasyCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 //        easy.save(new SaveListener<String>() {
 //            @Override
 //            public void done(String objectId,BmobException e) {
@@ -182,6 +212,59 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
 //            }
 //        });
     }
+    okhttp3.Callback addEasyCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                 @Override
+                 public void run() {
+                     progressDialog.dismiss();
+//                     finish();
+                     //关闭之前保存在本地
+
+                     Toast.makeText(AddNewEasyActivity.this, "插入失败", Toast.LENGTH_SHORT).show();
+                 }
+             }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("插入成功");
+                }else{
+                    System.out.print("插入失败");
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent easyListIntent=new Intent();
+                    easyListIntent.setClass(AddNewEasyActivity.this,EasyList.class);
+                    startActivity(easyListIntent);
+                    Toast.makeText(AddNewEasyActivity.this,
+                            "插入成功", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+    /**
+     * 获取当前时间方法
+     * @return
+     */
+    public String getCurrentTime(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String currentTime=df.format(new Date());
+        return currentTime;
+    }
+    //选择照片或是相机
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -391,7 +474,6 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
             return null;
         }
     }
-
 
 
 }
