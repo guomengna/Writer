@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,8 +35,10 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.JavaBean.Easy;
+import com.example.guome.writer.JavaBean.User;
 import com.example.guome.writer.MyTool.SQLiteHelper;
 import com.example.guome.writer.R;
+import com.example.guome.writer.app.MyApplication;
 import com.example.guome.writer.server.WebServer;
 
 import java.io.File;
@@ -83,6 +86,9 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
     private Uri uri;
     private SQLiteHelper helper=new SQLiteHelper(this);
     private Handler handler=new Handler();
+    private User currentLoginUser=new User();
+    private String currentUsername;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +102,12 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         cancel_btn=findViewById(R.id.cancel_btn);
         choose_pic_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
+        // 获取保存的用户名和密码
+        SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            currentUsername=sharedPreferences.getString("username", "");
+            Toast.makeText(AddNewEasyActivity.this,"currentLoginUser's name="+currentUsername,Toast.LENGTH_SHORT);
+        }
         vto = addneweasy.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -160,7 +172,7 @@ public class AddNewEasyActivity extends Activity implements Button.OnClickListen
         updateData=getCurrentTime().toString();
 
         //获取当前登录的作者名
-        author="nana";
+        author=currentUsername;
 //        //封装进Easy对象中
 //        Easy easy=new Easy();
 //        easy.setContent(content);

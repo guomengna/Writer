@@ -71,6 +71,7 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.touxiang:
+                finish();
                 Intent intent=new Intent();
                 intent.setClass(MainActivity.this, PersonInformationActivity.class);
                 startActivity(intent);

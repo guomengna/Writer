@@ -9,7 +9,9 @@ package com.example.guome.writer.Activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,6 +51,7 @@ import java.io.IOException;
 
 import static android.R.attr.tag;
 
+
 /**
  *用Manager类登录，此类继承自BmobUser类
  *可以使用注册的邮箱地址登录
@@ -70,6 +73,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private final BmobUser bmobUser=new BmobUser();
     private Handler handler=new Handler();
     private ProgressDialog progressDialog;
+    User testUser=new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +104,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 //                break;
         }
     }
-
     public void managerLogin() {
-
         progressDialog.setMessage("登录中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
@@ -113,7 +115,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             return;
         }
         try {
-            WebServer.getWebServer().login(username,password,loginCallBack);
+            WebServer.getWebServer().getLoginUser(username,password,getloginUserCallBack);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -145,6 +147,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     /**
      * 登录的回调方法
+     * 未调用
      */
     okhttp3.Callback loginCallBack=new okhttp3.Callback() {
         @Override
@@ -210,7 +213,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             handler.post(new Runnable() {
                      @Override
                      public void run() {
-                         Toast.makeText(LoginActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
+                         progressDialog.dismiss();
+                         Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+//                         Toast.makeText(LoginActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
                      }
                  }
             );
@@ -234,6 +239,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     user.setId(id);
                     user.setPassword(password);
                     user.setEmail(email);
+                    testUser=user;
                     MyApplication.put("user", user);
                 }else{
                     System.out.print("获取失败");
@@ -244,12 +250,39 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent loginIntent=new Intent();
+                    loginIntent.setClass(LoginActivity.this,MainActivity.class);
+                    startActivity(loginIntent);
                     Toast.makeText(LoginActivity.this,
-                            "获取成功", Toast.LENGTH_SHORT).show();
+                            "登录成功,获取成功"+testUser.getUsername(), Toast.LENGTH_SHORT).show();
+                    saveLoginInfo(LoginActivity.this,testUser);
+                    Toast.makeText(LoginActivity.this,
+                            "保存成功", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     };
+
+    /**
+     * 使用saveLoginInfo保存登录的用户
+     * @param context
+     * @param user
+     */
+    public static void saveLoginInfo(Context context, User user) {
+        // 获取SharedPreferences对象
+        SharedPreferences sharedPre = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        // 获取Editor对象
+        SharedPreferences.Editor editor = sharedPre.edit();
+        // 设置参数
+        editor.putString("username", user.getUsername());
+        editor.putString("password", user.getPassword());
+        editor.putInt("id", user.getId());
+        editor.putString("email", user.getEmail());
+        // 提交
+        editor.commit();
+    }
     //跳转到注册界面
     public void register() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);

@@ -19,4 +19,11 @@
             android:onClick="onClick"
             android:layout_weight="0.01" />
     </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/logout"
+        android:text="退出登录"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"/>
 </LinearLayout>
