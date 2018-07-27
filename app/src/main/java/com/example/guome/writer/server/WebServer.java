@@ -160,11 +160,27 @@ public class WebServer {
     }
 
     /**
-     * 获取当前登录的用户
+     * 新用户注册
      * @param username
      * @param password
+     * @param email
      * @param requestCallBack
      */
+    public void register(String username,String password, String email, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("username", username )
+                .add("password", password )
+                .add("email", email )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/register")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
     public void getLoginUser(String username,String password, okhttp3.Callback requestCallBack) {
         RequestBody body = new FormBody.Builder()
                 .add("username", username )

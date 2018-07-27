@@ -96,8 +96,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 managerLogin();
                 break;
             case R.id.register:
-//                register();
-//                break;
+                register();
+                break;
 //            case R.id.reset_psw:
 //                Intent intent=new Intent(this,EmailChangePwd.class);
 //                startActivity(intent);
@@ -242,7 +242,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     testUser=user;
                     MyApplication.put("user", user);
                 }else{
-                    System.out.print("获取失败");
+                    System.out.print("登录失败，用户名或者密码不正确");
+
                 }
             }catch(Exception e){
                 Log.e("exception", e.toString());

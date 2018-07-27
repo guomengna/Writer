@@ -3,6 +3,10 @@
     package="com.example.guome.writer">
     <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--允许应用程序访问WIFI网卡的网络信息-->    
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+    <!--允许应用程序访问有关的网络信息-->    
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--获取wifi网络状态的信息 -->

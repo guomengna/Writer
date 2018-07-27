@@ -5,11 +5,15 @@ package com.example.guome.writer.Activity;
  */
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.ParseException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,15 +22,23 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.JavaBean.User;
+import com.example.guome.writer.MainActivity;
+import com.example.guome.writer.MyTool.CheckEmail;
+import com.example.guome.writer.MyTool.MailValid;
 import com.example.guome.writer.MyTool.MaxLengthWatcher;
 import com.example.guome.writer.R;
+import com.example.guome.writer.server.WebServer;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by guomengna on 2016/6/8.  注册成功实现
@@ -37,7 +49,7 @@ import cn.bmob.v3.listener.SaveListener;
  * 登录时可以用手机号、账户名、邮箱
  * 注册时手机号码、邮箱、用户名不能重复
  */
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends Activity implements View.OnClickListener{
     private EditText register_inputUsername;
     private EditText register_inputPassword;
     private EditText register_inputEmail;
@@ -48,27 +60,25 @@ public class RegisterActivity extends Activity {
     private String email;
     private TextView title;
     private User newUser=new User();
+    private Handler handler=new Handler();
+    private ProgressDialog progressDialog;
+    private CheckEmail checkEmail=new CheckEmail();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
+        register_submit=findViewById(R.id.register_submit);
         register_inputUsername = (EditText) findViewById(R.id.register_inputUsername);
         //调用限定最大位数方法，限定最多15位
         register_inputUsername.addTextChangedListener(new MaxLengthWatcher(15, register_inputUsername));
         register_inputPassword = (EditText) findViewById(R.id.register_inputPassword);
         //限定密码最多16位
         register_inputPassword.addTextChangedListener(new MaxLengthWatcher(16, register_inputPassword));
-        //限定手机号码最多11位
+
         register_inputEmail = (EditText) findViewById(R.id.register_inputEmail);
-        //register_inputEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);//限制只能输入邮箱地址
+
         register_submit = (Button) findViewById(R.id.register_submit);
-        //register_submit.getBackground().setAlpha(100);
-//        register_submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                register();
-//            }
-//        });
+
         title = (TextView) findViewById(R.id.titleTv);
         title.setText("用户注册");
         findViewById(R.id.backa).setOnClickListener(new View.OnClickListener() {
@@ -77,7 +87,103 @@ public class RegisterActivity extends Activity {
                 finish();
             }
         });
+        progressDialog=new ProgressDialog(RegisterActivity.this);
+
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.register_submit:
+                register();
+                break;
+        }
+    }
+
+    public void register(){
+        progressDialog.setMessage("注册中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+        //验证是否为空
+        if (register_inputUsername.getText().toString().isEmpty() ||
+                register_inputPassword.getText().toString().isEmpty()||
+                register_inputEmail.getText().toString().isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            return;
+        }
+        username=register_inputUsername.getText().toString();
+        password = register_inputPassword.getText().toString();
+        email = register_inputEmail.getText().toString();
+        if(!isEmail(email)){
+            Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            return;
+        }
+        //验证邮箱
+//        Boolean yanzheng=new CheckEmail().isEmailValid(email);
+//        Toast.makeText(RegisterActivity.this,"yanzheng="+yanzheng,Toast.LENGTH_LONG).show();
+//        if(!yanzheng) {
+//            Toast.makeText(RegisterActivity.this, "email地址不合法", Toast.LENGTH_SHORT).show();
+//            progressDialog.dismiss();
+//            return;
+//        }
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+        try {
+            WebServer.getWebServer().register(username,password,email,getRegisterCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //验证是否已经注册过了（）
+    }
+    /**
+     * 注册的回调方法
+     *
+     */
+    okhttp3.Callback getRegisterCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e){
+            final String ex=e.getMessage().toString();
+            System.out.print("e="+e);
+            handler.post(new Runnable() {
+                             @Override
+                             public void run() {
+                     progressDialog.dismiss();
+                     Toast.makeText(RegisterActivity.this,
+                             "注册失败,ex="+ex, Toast.LENGTH_SHORT).show();
+                 }
+             }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("注册成功");
+                }else{
+                    System.out.print("注册失败");
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent loginIntent=new Intent();
+                    loginIntent.setClass(RegisterActivity.this,LoginActivity.class);
+                    startActivity(loginIntent);
+                }
+            });
+        }
+    };
     //注册方法
 //    public void register(){
 //        username = register_inputUsername.getText().toString();
