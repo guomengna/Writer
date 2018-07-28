@@ -28,7 +28,17 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+//    testCompile 'junit:junit:4.12'
+//    configurations.all {
+//        resolutionStrategy {
+//            force 'junit:junit:4.12'
+//        }
+//    }
+    configurations.all {
+        resolutionStrategy.force 'junit:junit:4.12'
+    }
+//    androidTestCompile 'junit:junit:4.12'
+
     //以下SDK开发者请根据需要自行选择
     //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
     //3.5.5：请务必查看下面注释[1]
@@ -48,4 +58,7 @@ dependencies {
     compile 'commons-net:commons-net:3.6'
     compile 'dnsjava:dnsjava:2.1.1'
     implementation files('libs/commons-lang3-3.1.jar')
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
 }

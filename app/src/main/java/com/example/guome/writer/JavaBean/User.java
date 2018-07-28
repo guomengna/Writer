@@ -10,6 +10,8 @@ public class User{
     private String username;
     private String password;
     private String email;
+    private int code;//验证码
+    private boolean actived;//激活状态
 
     public void setEmail(String email) {
         this.email = email;
@@ -42,4 +44,20 @@ public class User{
     public String getUsername() {
         return username;
     }
+
+    public void setActived(boolean actived) {
+        this.actived = actived;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+    public boolean getActived(boolean actived) {
+        return actived;
+    }
+
 }

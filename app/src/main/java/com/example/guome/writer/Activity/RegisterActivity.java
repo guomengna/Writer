@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.example.guome.writer.MyTool.CheckEmail;
 import com.example.guome.writer.MyTool.MailValid;
 import com.example.guome.writer.MyTool.MaxLengthWatcher;
 import com.example.guome.writer.R;
+import com.example.guome.writer.app.MyApplication;
 import com.example.guome.writer.server.WebServer;
 
 import java.io.IOException;
@@ -40,6 +42,19 @@ import cn.bmob.v3.listener.SaveListener;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import java.util.Properties;
+import java.util.UUID;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 /**
  * Created by guomengna on 2016/6/8.  注册成功实现
  * 开始的问题果然是出现在单选按钮上，单选按钮取值出现问题，set方法获取不到
@@ -49,25 +64,33 @@ import okhttp3.Response;
  * 登录时可以用手机号、账户名、邮箱
  * 注册时手机号码、邮箱、用户名不能重复
  */
-public class RegisterActivity extends Activity implements View.OnClickListener{
+public class RegisterActivity extends Activity implements View.OnClickListener {
     private EditText register_inputUsername;
     private EditText register_inputPassword;
     private EditText register_inputEmail;
     private Button register_submit;
-    private String str ;
+    private String str;
     private String username;
     private String password;
     private String email;
     private TextView title;
-    private User newUser=new User();
-    private Handler handler=new Handler();
+    private User newUser = new User();
+    private Handler handler = new Handler();
     private ProgressDialog progressDialog;
-    private CheckEmail checkEmail=new CheckEmail();
+    private CheckEmail checkEmail = new CheckEmail();
+    private int generatedCode = 0;
+    private int id = 0;
+    private int code = 0;
+    private User testUser=new User();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
-        register_submit=findViewById(R.id.register_submit);
+        //增加访问web的权限，不推荐使用
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        register_submit = findViewById(R.id.register_submit);
         register_inputUsername = (EditText) findViewById(R.id.register_inputUsername);
         //调用限定最大位数方法，限定最多15位
         register_inputUsername.addTextChangedListener(new MaxLengthWatcher(15, register_inputUsername));
@@ -81,46 +104,48 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
 
         title = (TextView) findViewById(R.id.titleTv);
         title.setText("用户注册");
+        //产生注册的验证码
+        generatedCode = generateRandomNumber();
         findViewById(R.id.backa).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        progressDialog=new ProgressDialog(RegisterActivity.this);
+        progressDialog = new ProgressDialog(RegisterActivity.this);
 
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.register_submit:
                 register();
                 break;
         }
     }
 
-    public void register(){
+    public void register() {
         progressDialog.setMessage("注册中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
         //验证是否为空
         if (register_inputUsername.getText().toString().isEmpty() ||
-                register_inputPassword.getText().toString().isEmpty()||
+                register_inputPassword.getText().toString().isEmpty() ||
                 register_inputEmail.getText().toString().isEmpty()) {
             Toast.makeText(RegisterActivity.this, "请将注册信息填写完整", Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             return;
         }
-        username=register_inputUsername.getText().toString();
+        username = register_inputUsername.getText().toString();
         password = register_inputPassword.getText().toString();
         email = register_inputEmail.getText().toString();
-        if(!isEmail(email)){
+        if (!isEmail(email)) {
             Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             return;
         }
-        //验证邮箱
+        //验证邮箱，有毛病……
 //        Boolean yanzheng=new CheckEmail().isEmailValid(email);
 //        Toast.makeText(RegisterActivity.this,"yanzheng="+yanzheng,Toast.LENGTH_LONG).show();
 //        if(!yanzheng) {
@@ -131,45 +156,62 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         newUser.setUsername(username);
         newUser.setPassword(password);
         newUser.setEmail(email);
+        newUser.setCode(generatedCode);
+        newUser.setActived(false);
         try {
-            WebServer.getWebServer().register(username,password,email,getRegisterCallBack);
+            WebServer.getWebServer().register(username, password, email, generatedCode,false, getRegisterCallBack);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         //验证是否已经注册过了（）
     }
+
     /**
      * 注册的回调方法
-     *
      */
-    okhttp3.Callback getRegisterCallBack=new okhttp3.Callback() {
+    okhttp3.Callback getRegisterCallBack = new okhttp3.Callback() {
         @Override
-        public void onFailure(Call call, IOException e){
-            final String ex=e.getMessage().toString();
-            System.out.print("e="+e);
+        public void onFailure(Call call, IOException e) {
+            final String ex = e.getMessage().toString();
+            System.out.print("e=" + e);
             handler.post(new Runnable() {
                              @Override
                              public void run() {
-                     progressDialog.dismiss();
-                     Toast.makeText(RegisterActivity.this,
-                             "注册失败,ex="+ex, Toast.LENGTH_SHORT).show();
-                 }
-             }
+                                 progressDialog.dismiss();
+                                 Toast.makeText(RegisterActivity.this,
+                                         "注册失败,ex=" + ex, Toast.LENGTH_SHORT).show();
+                             }
+                         }
             );
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
             com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
-            try{
-                String re=jsonObject.getString("result");
-                int r=Integer.parseInt(re);
-                if(r==1) {
+            try {
+                com.alibaba.fastjson.JSONObject getUser =jsonObject.getJSONObject("readerUser_returns");
+                String re = jsonObject.getString("result");
+                int r = Integer.parseInt(re);
+                if (r == 1) {
                     System.out.print("注册成功");
-                }else{
+                    int id = Integer.parseInt(getUser.getString("id"));
+                    String username = getUser.getString("username");
+                    String password = getUser.getString("password");
+                    String email = getUser.getString("email");
+                    //封装成User对象
+                    User user = new User();
+                    user.setUsername(username);
+                    user.setId(id);
+                    user.setPassword(password);
+                    user.setEmail(email);
+                    user.setCode(generatedCode);
+                    user.setActived(false);
+                    testUser = user;
+
+                } else {
                     System.out.print("注册失败");
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.e("exception", e.toString());
             }
             handler.post(new Runnable() {
@@ -177,13 +219,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                 public void run() {
                     progressDialog.dismiss();
                     finish();
-                    Intent loginIntent=new Intent();
-                    loginIntent.setClass(RegisterActivity.this,LoginActivity.class);
+                    //注册信息成功之后验证邮箱
+                    sendMail(testUser.getEmail().toString(),generatedCode,testUser.getId());
+                    Intent loginIntent = new Intent();
+                    loginIntent.setClass(RegisterActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
             });
         }
     };
+
     //注册方法
 //    public void register(){
 //        username = register_inputUsername.getText().toString();
@@ -214,11 +259,84 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
 //            }
 //        });
 //    }
-    //判断邮箱格式
+//
+    /**
+     * 判断邮箱格式
+     */
     public boolean isEmail(String email) {
         String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         Pattern p = Pattern.compile(str);
         Matcher m = p.matcher(email);
         return m.matches();
     }
+
+    /**
+     * 发送激活邮件
+     * @param to 收件人邮箱地址
+     * @param code 激活码
+     */
+    public boolean sendMail(String to, int code, int id) {
+        System.out.print("to="+to);
+        System.out.print("code="+code);
+        System.out.print("id="+id);
+        try {
+            Properties props = new Properties();
+            props.put("username", "18202423540@163.com");
+            props.put("password", "na19941209");
+            props.put("mail.transport.protocol", "smtp" );
+            props.put("mail.smtp.host", "smtp.163.com");
+            props.put("mail.smtp.port", "25" );
+
+            Session mailSession = Session.getDefaultInstance(props);
+
+            Message msg = new MimeMessage(mailSession);
+            msg.setFrom(new InternetAddress("18202423540@163.com"));
+            msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            msg.setSubject("激活邮件");
+            msg.setContent("<h1>此邮件为Writer官方激活邮件！请点击下面链接完成激活操作！" +
+                    "</h1><h3><a href='http://192.168.1.111:80/usermanagement/validEmail?id="+id+"&code="+code+"'>"+
+                    "http://192.168.1.111:80/usermanagement/validEmail</a></h3>","text/html;charset=UTF-8");
+            msg.saveChanges();
+
+            Transport transport = mailSession.getTransport("smtp");
+            transport.connect(props.getProperty("mail.smtp.host"), props
+                    .getProperty("username"), props.getProperty("password"));
+            transport.sendMessage(msg, msg.getAllRecipients());
+            transport.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 生成6位的随机数，用于写在发送邮件的第二个参数上
+     */
+    public int generateRandomNumber(){
+        int randomNumber = 0;
+        int intFlag = (int)(Math.random() * 1000000);
+        String flag = String.valueOf(intFlag);
+        if (flag.length() == 6 && flag.substring(0, 1).equals("9"))
+        {
+        }
+        else
+        {
+            intFlag = intFlag + 100000;
+        }
+        randomNumber=intFlag;
+        System.out.println(randomNumber+"");
+        return randomNumber;
+    }
+
+//    public void validEmail(){
+//        try {
+//            WebServer.getWebServer().validEmail(id,code,getvalidEmailCallBack);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }

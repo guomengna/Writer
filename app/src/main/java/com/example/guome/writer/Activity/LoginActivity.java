@@ -222,8 +222,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
-            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+
             try{
+                com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
                 com.alibaba.fastjson.JSONObject getUser=jsonObject.getJSONObject("readerUser_returns");
                 String re=jsonObject.getString("result");
                 int r=Integer.parseInt(re);

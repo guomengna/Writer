@@ -166,11 +166,13 @@ public class WebServer {
      * @param email
      * @param requestCallBack
      */
-    public void register(String username,String password, String email, okhttp3.Callback requestCallBack) {
+    public void register(String username,String password, String email,int code, boolean actived, okhttp3.Callback requestCallBack) {
         RequestBody body = new FormBody.Builder()
                 .add("username", username )
                 .add("password", password )
                 .add("email", email )
+                .add("code", code+"" )
+                .add("actived", actived+"" )
                 .build();
 
         Request request = new Request.Builder()
@@ -181,6 +183,13 @@ public class WebServer {
         call = okHttpClient.newCall(request);
         call.enqueue(requestCallBack);
     }
+
+    /**
+     * 实际登录所用的接口
+     * @param username
+     * @param password
+     * @param requestCallBack
+     */
     public void getLoginUser(String username,String password, okhttp3.Callback requestCallBack) {
         RequestBody body = new FormBody.Builder()
                 .add("username", username )
@@ -195,4 +204,26 @@ public class WebServer {
         call = okHttpClient.newCall(request);
         call.enqueue(requestCallBack);
     }
+
+    /**
+     * 邮箱验证
+     * @param id
+     * @param code
+     * @param requestCallBack
+     */
+    public void validEmail(int id,int code, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("id", id+"" )
+                .add("code", code+"" )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/validEmail")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
 }
