@@ -17,5 +17,7 @@
     <color name="easy_detail">#292323</color>
     <color name="gold">#fcd860</color>
     <color name="transparent">#00000000</color>
+    <color name="logout">#fc1f2d</color>
+    <color name="logout1">#fd9399</color>
 
 </resources>

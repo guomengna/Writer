@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/back_of_bar"
@@ -18,12 +18,105 @@
             android:background="@mipmap/fanhui"
             android:onClick="onClick"
             android:layout_weight="0.01" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="个人主页"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="用户名："
+            android:textSize="18dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/show_username"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:hint="username"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="邮箱："
+            android:textSize="18dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/show_email"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:hint="email"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="个人签名："
+            android:textSize="18dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/show_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:hint="个人签名"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            />
     </LinearLayout>
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/changepasswor"
+        android:text="修改密码"
+        android:onClick="onClick"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:background="@drawable/bt_changepassword"
+        android:layout_marginTop="20dp"/>
+    <Button
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/logout"
         android:text="退出登录"
         android:onClick="onClick"
-        android:layout_marginTop="10dp"/>
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:background="@drawable/bt_logout"
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

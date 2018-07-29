@@ -22,6 +22,7 @@ import static com.example.guome.writer.MyTool.UseSharePerferences.deleteLoginInf
 public class PersonInformationActivity extends Activity implements Button.OnClickListener {
     private ImageButton fanhui;
     private Button logoutButton;
+    private Button changePassword;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class PersonInformationActivity extends Activity implements Button.OnClic
 //        final SharedPreferences sharedPreferences=getSharedPreferences("config", MODE_PRIVATE);
         fanhui = (ImageButton) findViewById(R.id.fanhui);
         logoutButton = findViewById(R.id.logout);
+        changePassword = findViewById(R.id.changepasswor);
         fanhui.setOnClickListener(this);
         logoutButton.setOnClickListener(this);
     }
@@ -51,6 +53,10 @@ public class PersonInformationActivity extends Activity implements Button.OnClic
                 //缓存用户对象为空时， 可打开用户注册界面…
                 Intent intent = new Intent(PersonInformationActivity.this, LoginActivity.class);
                 PersonInformationActivity.this.startActivity(intent);
+                break;
+            case R.id.changepasswor:
+                Intent intent1 = new Intent(PersonInformationActivity.this, ChangePasswordActivity.class);
+                PersonInformationActivity.this.startActivity(intent1);
                 break;
         }
     }

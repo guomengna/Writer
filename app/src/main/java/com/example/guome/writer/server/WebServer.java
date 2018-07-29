@@ -226,4 +226,25 @@ public class WebServer {
         call.enqueue(requestCallBack);
     }
 
+    /**
+     * 修改密码
+     * @param id
+     * @param password
+     * @param requestCallBack
+     */
+    public void changePassword(int id,String password, okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("id", id+"" )
+                .add("password", password+"" )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/changePassword")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
 }
