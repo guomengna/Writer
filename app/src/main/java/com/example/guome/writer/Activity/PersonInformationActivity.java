@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.TestLooperManager;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guome.writer.MainActivity;
@@ -23,6 +25,8 @@ public class PersonInformationActivity extends Activity implements Button.OnClic
     private ImageButton fanhui;
     private Button logoutButton;
     private Button changePassword;
+    private String username,email,sign;
+    private TextView usernameTv,emailTv,signTv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,8 +36,19 @@ public class PersonInformationActivity extends Activity implements Button.OnClic
         fanhui = (ImageButton) findViewById(R.id.fanhui);
         logoutButton = findViewById(R.id.logout);
         changePassword = findViewById(R.id.changepasswor);
+        usernameTv=findViewById(R.id.show_username);
+        emailTv=findViewById(R.id.show_email);
+        signTv=findViewById(R.id.show_sign);
+        changePassword.setOnClickListener(this);
         fanhui.setOnClickListener(this);
         logoutButton.setOnClickListener(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+
+        username=sharedPreferences.getString("username", "");
+        email=sharedPreferences.getString("email", "");
+        usernameTv.setText(username);
+        emailTv.setText(email);
+
     }
 
     @Override

@@ -34,6 +34,8 @@ import com.example.guome.writer.app.MyApplication;
 import com.example.guome.writer.server.WebServer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,9 +72,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private EditText register_inputEmail;
     private Button register_submit;
     private String str;
-    private String username;
-    private String password;
-    private String email;
+    private String username;//注册用户名
+    private String password;//注册密码
+    private String email;//注册邮箱
     private TextView title;
     private User newUser = new User();
     private Handler handler = new Handler();
@@ -82,7 +84,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private int id = 0;
     private int code = 0;
     private User testUser=new User();
-
+    private List<String> emailList=new ArrayList<String>();
+    private List<String> usernameList=new ArrayList<String>();
+    private String hasUsername="";
+    private String hasEmail="";
+    private int flag=0;
+    private int flag1=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +152,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             progressDialog.dismiss();
             return;
         }
+        ifUsernameIsHad(username);
         //验证邮箱，有毛病……
 //        Boolean yanzheng=new CheckEmail().isEmailValid(email);
 //        Toast.makeText(RegisterActivity.this,"yanzheng="+yanzheng,Toast.LENGTH_LONG).show();
@@ -153,6 +161,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 //            progressDialog.dismiss();
 //            return;
 //        }
+    }
+    public void registerOperation(){
         newUser.setUsername(username);
         newUser.setPassword(password);
         newUser.setEmail(email);
@@ -163,10 +173,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        //验证是否已经注册过了（）
     }
-
     /**
      * 注册的回调方法
      */
@@ -221,9 +228,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                     finish();
                     //注册信息成功之后验证邮箱
                     sendMail(testUser.getEmail().toString(),generatedCode,testUser.getId());
-                    Intent loginIntent = new Intent();
-                    loginIntent.setClass(RegisterActivity.this, LoginActivity.class);
-                    startActivity(loginIntent);
+                    finish();
+//                    Intent loginIntent = new Intent();
+//                    loginIntent.setClass(RegisterActivity.this, LoginActivity.class);
+//                    startActivity(loginIntent);
                 }
             });
         }
@@ -339,4 +347,121 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 //        }
 //    }
 
+    /**
+     * 查询数据库中是否已经存在了相同的用户名或者邮箱
+     *
+     */
+    public void ifUsernameIsHad(String username){
+        try {
+            WebServer.getWebServer().getAllUsername(username,getAllUsernameCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * 验证Email是否存在
+     *
+     * @return
+     */
+    public void ifEmailIsHad(String email){
+        try {
+            WebServer.getWebServer().getAllEmail(email,getAllEmailCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    okhttp3.Callback getAllEmailCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                             @Override
+                             public void run() {
+                                 progressDialog.dismiss();
+                                 Toast.makeText(RegisterActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
+                             }
+                         }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            try{
+                com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+//                com.alibaba.fastjson.JSONArray getUser=jsonObject.getJSONArray("flag");
+                int f=jsonObject.getInteger("flag");
+                if(f==1) {
+//                    for(int i=0;i<getUser.size();i++){
+//                        emailList.add(getUser.get(i).toString());
+                        hasEmail="邮箱通过";
+                        flag1=1;
+//                    }
+                }else{
+                    hasEmail="邮箱已经注册";
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(flag1==1){
+                                registerOperation();
+                            }else {
+                                progressDialog.dismiss();
+                                Toast.makeText(RegisterActivity.this,"邮箱已经注册",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    };
+    okhttp3.Callback getAllUsernameCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                             @Override
+                             public void run() {
+                                 progressDialog.dismiss();
+                                 Toast.makeText(RegisterActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
+                             }
+                         }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+
+            try{
+                com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+//                com.alibaba.fastjson.JSONArray getUser=jsonObject.getJSONArray("resource");
+//                String re=jsonObject.getString("flag");
+                int f=jsonObject.getInteger("flag");
+//                int r=Integer.parseInt(re);
+                if(f==1) {
+                    hasUsername="用户名通过";
+                    flag=1;
+                }else{
+                    hasUsername="用户名已经存在";
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(flag==1){
+                        ifEmailIsHad(email);
+                    }else {
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterActivity.this,"用户名已经注册",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    };
 }

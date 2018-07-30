@@ -49,6 +49,7 @@
         <activity android:name=".Activity.EasyDetailActivity"
             android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".Activity.LocalEasyList"></activity>
+        <activity android:name=".Activity.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

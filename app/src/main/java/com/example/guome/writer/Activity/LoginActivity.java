@@ -96,6 +96,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 managerLogin();
                 break;
             case R.id.register:
+//                finish();
                 register();
                 break;
 //            case R.id.reset_psw:

@@ -229,13 +229,13 @@ public class WebServer {
     /**
      * 修改密码
      * @param id
-     * @param password
+     * @param newpassword
      * @param requestCallBack
      */
-    public void changePassword(int id,String password, okhttp3.Callback requestCallBack) {
+    public void changePassword(int id,String newpassword, okhttp3.Callback requestCallBack) {
         RequestBody body = new FormBody.Builder()
                 .add("id", id+"" )
-                .add("password", password+"" )
+                .add("newpassword", newpassword )
                 .build();
 
         Request request = new Request.Builder()
@@ -247,4 +247,39 @@ public class WebServer {
         call.enqueue(requestCallBack);
     }
 
+    /**
+     * 获取所有的Email
+     * @param requestCallBack
+     */
+    public void getAllEmail(String email,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("email", email )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/getAllEmail")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 获取所有的用户名,查询是否i经有该用户名
+     * @param requestCallBack
+     */
+    public void getAllUsername(String username,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("username", username )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/usermanagement/getAllUsername")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
 }
