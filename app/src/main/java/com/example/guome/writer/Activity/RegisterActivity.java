@@ -147,6 +147,18 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         username = register_inputUsername.getText().toString();
         password = register_inputPassword.getText().toString();
         email = register_inputEmail.getText().toString();
+        if(username.length()>15||username.length()<4){
+            Toast.makeText(RegisterActivity.this, "用户名不可超过15字符或短于4字符",
+                    Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            return;
+        }
+        if(password.length()>16||password.length()<6){
+            Toast.makeText(RegisterActivity.this, "密码不可超过16字符或短于6字符",
+                    Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            return;
+        }
         if (!isEmail(email)) {
             Toast.makeText(RegisterActivity.this, "地址格式错误", Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();

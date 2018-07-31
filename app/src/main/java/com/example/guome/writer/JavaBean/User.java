@@ -56,7 +56,7 @@ public class User{
     public int getCode() {
         return code;
     }
-    public boolean getActived(boolean actived) {
+    public boolean getActived() {
         return actived;
     }
 

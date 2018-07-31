@@ -51,7 +51,6 @@ import java.io.IOException;
 
 import static android.R.attr.tag;
 
-
 /**
  *用Manager类登录，此类继承自BmobUser类
  *可以使用注册的邮箱地址登录
@@ -235,17 +234,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     String username = getUser.getString("username");
                     String password = getUser.getString("password");
                     String email = getUser.getString("email");
+                    boolean actived = getUser.getBoolean("actived");
                     //封装成User对象
                     User user = new User();
                     user.setUsername(username);
                     user.setId(id);
                     user.setPassword(password);
                     user.setEmail(email);
+                    user.setActived(actived);
                     testUser=user;
                     MyApplication.put("user", user);
                 }else{
                     System.out.print("登录失败，用户名或者密码不正确");
-
+                    testUser=null;
                 }
             }catch(Exception e){
                 Log.e("exception", e.toString());
@@ -254,15 +255,24 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void run() {
                     progressDialog.dismiss();
-                    finish();
-                    Intent loginIntent=new Intent();
-                    loginIntent.setClass(LoginActivity.this,MainActivity.class);
-                    startActivity(loginIntent);
-                    Toast.makeText(LoginActivity.this,
-                            "登录成功,获取成功"+testUser.getUsername(), Toast.LENGTH_SHORT).show();
-                    saveLoginInfo(LoginActivity.this,testUser);
-                    Toast.makeText(LoginActivity.this,
-                            "保存成功", Toast.LENGTH_SHORT).show();
+                    if(testUser==null){
+                        Toast.makeText(LoginActivity.this,
+                                "登录失败,用户名或密码不正确", Toast.LENGTH_SHORT).show();
+                    }else if(!testUser.getActived()){
+                        Toast.makeText(LoginActivity.this,
+                                "登录失败,此用户名注册邮箱未经验证"+testUser.getActived(),
+                                Toast.LENGTH_SHORT).show();
+                    }else{
+                        finish();
+                        Intent loginIntent=new Intent();
+                        loginIntent.setClass(LoginActivity.this,MainActivity.class);
+                        startActivity(loginIntent);
+                        Toast.makeText(LoginActivity.this,
+                                "登录成功,获取成功"+testUser.getUsername(), Toast.LENGTH_SHORT).show();
+                        saveLoginInfo(LoginActivity.this,testUser);
+                        Toast.makeText(LoginActivity.this,
+                                "保存成功", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

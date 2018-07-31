@@ -248,7 +248,7 @@ public class WebServer {
     }
 
     /**
-     * 获取所有的Email
+     * 获取所有的Email，查询是否已经有该邮箱
      * @param requestCallBack
      */
     public void getAllEmail(String email,okhttp3.Callback requestCallBack) {
@@ -266,7 +266,7 @@ public class WebServer {
     }
 
     /**
-     * 获取所有的用户名,查询是否i经有该用户名
+     * 获取所有的用户名,查询是否已经有该用户名
      * @param requestCallBack
      */
     public void getAllUsername(String username,okhttp3.Callback requestCallBack) {
