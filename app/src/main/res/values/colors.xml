@@ -19,5 +19,9 @@
     <color name="transparent">#00000000</color>
     <color name="logout">#fc1f2d</color>
     <color name="logout1">#fd9399</color>
+    <color name="fabu_normal">#f7bc3d</color>
+    <color name="fabu_pressed">#efd18f</color>
+    <color name="rollback_normal">#50f785</color>
+    <color name="rollback_pressed">#97f9b6</color>
 
 </resources>

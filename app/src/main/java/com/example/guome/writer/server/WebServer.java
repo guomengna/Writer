@@ -282,4 +282,21 @@ public class WebServer {
         call = okHttpClient.newCall(request);
         call.enqueue(requestCallBack);
     }
+
+    /**
+     * 获取文章数量
+     * @param requestCallBack
+     */
+    public void getCountOfEasy(okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/getCountOfEasy")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
 }

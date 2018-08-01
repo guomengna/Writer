@@ -2,6 +2,7 @@ package com.example.guome.writer.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     List<Easy> easyListByAuthor=new ArrayList<>();
     private EasyListAdapter easyListAdapter;
     private PullToRefreshView pullRefreshBar;
-
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
         //增加访问web的权限，不推荐使用
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
-
+        progressDialog=new ProgressDialog(EasyList.this);
         easyListView = (ListView) findViewById(R.id.listView);
         back=findViewById(R.id.backa);
         back.setOnClickListener(this);
@@ -152,6 +153,9 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     }
     //初始化数据，访问网络的操作放在这个方法中，从主函数中脱离
     public void initData(){
+        progressDialog.setMessage("获取中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
         WebServer.getWebServer().getAllEasys(getAllEasyCallBack);
         //根据作者名称获取该作者的所有文章
 //            WebServer.getWebServer().getEasysByAuthor("nana",getEasyByAuthorCallBack);
@@ -161,9 +165,16 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     okhttp3.Callback getAllEasyCallBack=new okhttp3.Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+            progressDialog.dismiss();
             List<Easy> easyList=new ArrayList<>();
             com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
             try{
@@ -202,6 +213,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    progressDialog.dismiss();
 //                    easyListAdapter.notifyDataSetChanged();
                     //初次显示列表数据需要初始化，与下拉刷新与上拉显示是不同的。
                     easyListAdapter = new EasyListAdapter(getApplication(),easyList1);
@@ -312,6 +324,9 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
 //    }
     //根据id删除
     public void delete(int id){
+        progressDialog.setMessage("删除中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
         WebServer.getWebServer().deleteEasyById(id,deleteEasyByIdCallBack);
 
     }
@@ -319,9 +334,16 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     okhttp3.Callback deleteEasyByIdCallBack=new okhttp3.Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+            progressDialog.dismiss();
             com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
             try{
                 String re=jsonObject.getString("result");
@@ -337,6 +359,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    progressDialog.dismiss();
                     easyListAdapter.notifyDataSetChanged();
                     Toast.makeText(EasyList.this, "删除成功"+easyListByAuthor.size(), Toast.LENGTH_SHORT).show();
                 }
@@ -480,6 +503,9 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
 
         try {
             easyList1.clear();
+            progressDialog.setMessage("刷新中");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
 //            WebServer.getWebServer().getribao(companyid,userid,1,10,keyWord.getText().toString(),getAllRibaoCallBackdown);
             WebServer.getWebServer().getAllEasys(getAllEasyFlashCallBack);
         } catch (android.net.ParseException e) {
@@ -490,9 +516,16 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     okhttp3.Callback getAllEasyFlashCallBack=new okhttp3.Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+            progressDialog.dismiss();
             List<Easy> easyList=new ArrayList<>();
             com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
             try{
@@ -531,6 +564,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    progressDialog.dismiss();
                     //更新list列表
                     Toast.makeText(EasyList.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     pullRefreshBar.onHeaderRefreshComplete();
@@ -550,6 +584,9 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     public void PullUpFresh() {
 //        Toast.makeText(DayLogListActivity.this,keyWord.getText().toString(),Toast.LENGTH_SHORT).show();
         try {
+            progressDialog.setMessage("加载中");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
             WebServer.getWebServer().getAllEasys(getAllEasyFlashCallBack);
         } catch (android.net.ParseException e) {
             e.printStackTrace();

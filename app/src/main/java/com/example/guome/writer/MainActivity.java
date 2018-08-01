@@ -1,8 +1,11 @@
 package com.example.guome.writer;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,13 +13,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.guome.writer.Activity.AddNewEasyActivity;
 import com.example.guome.writer.Activity.EasyList;
 import com.example.guome.writer.Activity.LiwenList;
 import com.example.guome.writer.Activity.LocalEasyList;
+import com.example.guome.writer.Activity.LoginActivity;
 import com.example.guome.writer.Activity.PersonInformationActivity;
 import com.example.guome.writer.JavaBean.Easy;
+import com.example.guome.writer.JavaBean.User;
+import com.example.guome.writer.app.MyApplication;
+import com.example.guome.writer.server.WebServer;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +38,8 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 主页
@@ -41,6 +52,9 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     TextView counterEasy,counterLocalEasy;
     private int counterOfEasy,counterofLocalEasy;
     private String ApplicationID="933f9a1decf27d18db673da059d2d861";
+    private Handler handler=new Handler();
+    private ProgressDialog progressDialog;
+    private int count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +73,13 @@ public class MainActivity extends Activity implements Button.OnClickListener{
         enterLiwen.setOnClickListener(this);
         enterWenzhang=findViewById(R.id.wenzhang_enter);
         enterWenzhang.setOnClickListener(this);
+        progressDialog=new ProgressDialog(MainActivity.this);
         counterEasy=findViewById(R.id.number_wenzhang);//上传成功的文章数量
         counterLocalEasy=findViewById(R.id.localnumber_wenzhang);//本地文章的数量
         enterlocalwenzhang=findViewById(R.id.localwenzhang_enter);//本地文章入口
         enterlocalwenzhang.setOnClickListener(this);//设置本地文章按钮动作
-        queryEasyCount();//查询上传成功的文章数量，并显示出来
+//        queryEasyCount();
+         getEasyCount();//查询上传成功的文章数量，并显示出来
         queryLocalEasyCount();//查询本地文章数量，并显示出来
     }
 
@@ -105,6 +121,7 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 break;
         }
     }
+
     public void queryEasyCount(){
         BmobQuery<Easy> query = new BmobQuery<Easy>();
         List<BmobQuery<Easy>> and = new ArrayList<BmobQuery<Easy>>();
@@ -160,6 +177,54 @@ public class MainActivity extends Activity implements Button.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-        queryEasyCount();
+//        queryEasyCount();
+        getEasyCount();
     }
+
+    public int getEasyCount(){
+        try {
+            WebServer.getWebServer().getCountOfEasy(getEasyCountCallBack);
+        } catch (android.net.ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    okhttp3.Callback getEasyCountCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            try{
+                com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("获取成功");
+                    count = jsonObject.getInteger("count");
+                }else{
+                    count = 0;
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    if(count==0){
+                        counterEasy.setText("数量");
+                    }else{
+                        counterEasy.setText(count+"");
+                    }
+                }
+            });
+        }
+    };
 }

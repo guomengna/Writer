@@ -22,4 +22,9 @@
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/white</item>
     </style>
+    <style name="fab_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item> //文字背景的样式
+        <item name="android:textColor">@color/easy_detail</item> //文字的颜色
+        <item name="android:textSize">12dp</item>
+    </style>
 </resources>

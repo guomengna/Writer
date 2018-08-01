@@ -9,7 +9,7 @@
         android:id="@+id/rlCommenTitleBG"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/back_of_bar" />
+        android:background="@color/colorPrimaryDark" />
 
     <TextView
         style="@style/A1_Font"

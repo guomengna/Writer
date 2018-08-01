@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,13 +53,16 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
     private int firClick = 0;
     private int secClick = 0;
     private int flage = 0;
-    ProgressDialog progressDialog;//进度显示框
     private String content;
     private String title;
     private Uri uri;
     private TextView submitTextView;
     private Handler handler=new Handler();
     private Easy easyById=new Easy();
+    private ImageButton back;
+    private com.github.clans.fab.FloatingActionButton fabuBbutton;
+    private com.github.clans.fab.FloatingActionButton rollbackButton;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,17 +75,36 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
         easy_editText.setOnClickListener(this);
         submitTextView=findViewById(R.id.submit);
         submitTextView.setOnClickListener(this);
+        back=findViewById(R.id.fanhui);
+        back.setOnClickListener(this);
+        progressDialog=new ProgressDialog(EasyDetailActivity.this);
+        fabuBbutton=findViewById(R.id.fabu_button);
+        fabuBbutton.setOnClickListener(this);
+        rollbackButton=findViewById(R.id.rollback);
+        rollbackButton.setOnClickListener(this);
 //        queryById();
         getEasyById();
     }
     public void getEasyById(){
-        Toast.makeText(EasyDetailActivity.this,"id="+id,Toast.LENGTH_SHORT).show();
+        progressDialog.setMessage("获取中");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+//        Toast.makeText(EasyDetailActivity.this,"id="+id,Toast.LENGTH_SHORT).show();
         WebServer.getWebServer().findByEasyId(id,getEasyByIdCallBack);
     }
     //获取该ID的文章，并把内容显示出来
     okhttp3.Callback getEasyByIdCallBack=new okhttp3.Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                             @Override
+                             public void run() {
+                             progressDialog.dismiss();
+                             Toast.makeText(EasyDetailActivity.this, "登录失败",
+                                     Toast.LENGTH_SHORT).show();
+                             }
+                         }
+            );
         }
         @Override
         public void onResponse(Call call, Response response) throws IOException {
@@ -118,7 +141,7 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(EasyDetailActivity.this,easy_editText.getText().toString(),Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
             });
         }
@@ -200,6 +223,19 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
             case R.id.submit:
                 content=easy_editText.getText().toString();
                 submitOfChange();
+                break;
+            case R.id.fanhui:
+                finish();
+                break;
+            case R.id.fabu_button:
+                Intent intent=new Intent();
+                intent.setClass(EasyDetailActivity.this,FabuActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.rollback:
+                Toast.makeText(EasyDetailActivity.this, "回滚", Toast.LENGTH_SHORT).show();
+                break;
         }
 
 }
