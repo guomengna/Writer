@@ -20,6 +20,7 @@ import com.example.guome.writer.Activity.LiwenList;
 import com.example.guome.writer.Activity.LocalEasyList;
 import com.example.guome.writer.Activity.LoginActivity;
 import com.example.guome.writer.Activity.PersonInformationActivity;
+import com.example.guome.writer.Activity.PublicedEasyList;
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.JavaBean.User;
 import com.example.guome.writer.app.MyApplication;
@@ -93,7 +94,10 @@ public class MainActivity extends Activity implements Button.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.zhuanlan:
-                Toast.makeText(MainActivity.this,"点击了专栏按钮",Toast.LENGTH_SHORT).show();
+                Intent intent2=new Intent();
+                intent2.setClass(MainActivity.this, PublicedEasyList.class);
+                startActivity(intent2);
+//                Toast.makeText(MainActivity.this,"点击了专栏按钮",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.bianxie:
                 Toast.makeText(MainActivity.this,"点击了编写按钮",Toast.LENGTH_SHORT).show();

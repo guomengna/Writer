@@ -299,4 +299,49 @@ public class WebServer {
         call = okHttpClient.newCall(request);
         call.enqueue(requestCallBack);
     }
+
+    /**
+     * 发布文章
+     * @param title
+     * @param content
+     * @param author
+     * @param publiceddata
+     * @param requestCallBack
+     */
+    public void publicdEasy(String title, String content, String author, String publiceddata
+            ,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("title", title )
+                .add("content", content )
+                .add("author", author )
+                .add("publiceddata", publiceddata )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/publicdEasy")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 根据文章的作者名称获取发布的文章
+     * @param author
+     * @param requestCallBack
+     */
+    public void getPublicedEasysByAuthor(String author,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("author", author )
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://192.168.1.111:80/easymanagement/getPublicedEasysByAuthor")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
 }

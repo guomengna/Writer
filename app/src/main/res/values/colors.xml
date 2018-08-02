@@ -23,5 +23,9 @@
     <color name="fabu_pressed">#efd18f</color>
     <color name="rollback_normal">#50f785</color>
     <color name="rollback_pressed">#97f9b6</color>
+    <color name="textback">#f7bc3d</color>
+    <color name="textback_title">#fa8e2f</color>
+    <color name="textback1">#347b4c</color>
+    <color name="textback_title1">#255f39</color>
 
 </resources>

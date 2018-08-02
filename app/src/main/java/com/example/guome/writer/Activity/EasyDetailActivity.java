@@ -3,6 +3,7 @@ package com.example.guome.writer.Activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,13 +21,16 @@ import com.alibaba.fastjson.JSON;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.example.guome.writer.JavaBean.Easy;
+import com.example.guome.writer.JavaBean.PublicedEasy;
 import com.example.guome.writer.MyTool.MyTextView;
 import com.example.guome.writer.R;
 import com.example.guome.writer.server.WebServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -63,6 +67,8 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
     private com.github.clans.fab.FloatingActionButton fabuBbutton;
     private com.github.clans.fab.FloatingActionButton rollbackButton;
     private ProgressDialog progressDialog;
+    private Easy easyRecord;
+    private PublicedEasy publicedEasy=new PublicedEasy();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +95,6 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
         progressDialog.setMessage("获取中");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
-//        Toast.makeText(EasyDetailActivity.this,"id="+id,Toast.LENGTH_SHORT).show();
         WebServer.getWebServer().findByEasyId(id,getEasyByIdCallBack);
     }
     //获取该ID的文章，并把内容显示出来
@@ -134,6 +139,8 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
                         easy.setAuthor(author);
                         System.out.println("easy title is" + title + " and content is " + content);
                         easy_editText.setText(easy.getContent().toString());
+                        easyRecord=new Easy();
+                        easyRecord=easy;
                     }
             }catch(Exception e){
                 Log.e("exception", e.toString());
@@ -228,10 +235,7 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
                 finish();
                 break;
             case R.id.fabu_button:
-                Intent intent=new Intent();
-                intent.setClass(EasyDetailActivity.this,FabuActivity.class);
-                startActivity(intent);
-                finish();
+                publicEasy();
                 break;
             case R.id.rollback:
                 Toast.makeText(EasyDetailActivity.this, "回滚", Toast.LENGTH_SHORT).show();
@@ -239,6 +243,67 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
         }
 
 }
+    public void publicEasy(){
+        publicedEasy.setAuthor(easyRecord.getAuthor());
+        publicedEasy.setContent(easyRecord.getContent());
+        publicedEasy.setTitle(easyRecord.getTitle());
+        publicedEasy.setPubliceddata(getCurrentTime().toString());
+        try {
+            WebServer.getWebServer().publicdEasy(publicedEasy.getTitle(),publicedEasy.getContent(),
+                    publicedEasy.getAuthor(),publicedEasy.getPubliceddata(),publicEasyCallBack);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    okhttp3.Callback publicEasyCallBack=new okhttp3.Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            handler.post(new Runnable() {
+                             @Override
+                             public void run() {
+                             progressDialog.dismiss();
+                             Toast.makeText(EasyDetailActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+                             }
+                         }
+            );
+        }
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(response.body().string());
+            try{
+                String re=jsonObject.getString("result");
+                int r=Integer.parseInt(re);
+                if(r==1) {
+                    System.out.print("发布成功");
+                }else{
+                    System.out.print("发布失败");
+                }
+            }catch(Exception e){
+                Log.e("exception", e.toString());
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent easyListIntent=new Intent();
+                    easyListIntent.setClass(EasyDetailActivity.this,PublicedEasyList.class);
+                    startActivity(easyListIntent);
+                    Toast.makeText(EasyDetailActivity.this,
+                            "发布成功", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+    /**
+     * 获取当前时间方法
+     * @return
+     */
+    public String getCurrentTime(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String currentTime=df.format(new Date());
+        return currentTime;
+    }
 
 
     public void submitOfChange(){
