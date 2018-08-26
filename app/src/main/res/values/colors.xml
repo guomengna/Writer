@@ -27,5 +27,8 @@
     <color name="textback_title">#fa8e2f</color>
     <color name="textback1">#347b4c</color>
     <color name="textback_title1">#255f39</color>
-
+    <color name="colorofZhuanlan">#26babf</color>
+    <color name="colorofZhuanlanTextview">#4cc9ce</color>
+    <color name="publicedeasyback">#fcedcc</color>
+    <color name="publicedeasyauthor">#fcd070</color>
 </resources>

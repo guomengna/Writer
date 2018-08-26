@@ -3,10 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
+
+    xmlns:cb="http://schemas.android.com/apk/res-auto"
     >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorofZhuanlanTextview"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -14,29 +21,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:typeface="sans"
+            android:layout_alignStart="@+id/content"
+            android:layout_marginTop="15dp"
             android:gravity="center"
             android:hint="题目"
-            android:textColor="@color/textback_title1"
-            android:textColorHint="@color/textback_title1"
-            android:textSize="24dp" />
-
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/title_easy"
-            android:layout_marginTop="11dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:gravity="center"
-            android:background="@color/textback1"
-            android:hint="文章内容"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="14dp" />
+            android:textSize="18dp"
+            android:typeface="sans" />
+
+        <com.example.guome.writer.view.AlignTextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/title_easy"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="11dp"
+            android:hint="文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容ceshi ,测试数据测试数据测试数据文章内容,ceshi,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据数据当回事"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="15dp"
+            cb:align="left" />
+
+        <TextView
+            android:id="@+id/publiced_data"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="129dp"
+            android:gravity="center_vertical"
+            android:hint="2018-08-25"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="12dp" />
     </RelativeLayout>
 </LinearLayout>

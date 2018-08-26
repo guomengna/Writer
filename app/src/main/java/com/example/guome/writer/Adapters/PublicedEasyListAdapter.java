@@ -1,12 +1,14 @@
 package com.example.guome.writer.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.JavaBean.PublicedEasy;
@@ -61,15 +63,17 @@ public class PublicedEasyListAdapter extends BaseAdapter {
                     .findViewById(R.id.title_easy);
             holder.content = (TextView) convertView
                     .findViewById(R.id.content);
-
+            holder.publicedData = (TextView) convertView
+                    .findViewById(R.id.publiced_data);
             holders.add(holder);
             convertView.setTag(holder);
         } else {
             holder = (PublicedEasyListAdapter.EasyItemViewHolder) convertView.getTag();
         }
+
         holder.title.setText(publicedEasy.getTitle());
         holder.content.setText(publicedEasy.getContent());
-
+        holder.publicedData.setText(publicedEasy.getPubliceddata());
 
         return convertView;
     }
@@ -77,6 +81,7 @@ public class PublicedEasyListAdapter extends BaseAdapter {
     static class EasyItemViewHolder {
         TextView title;
         TextView content;
+        TextView publicedData;
 
     }
     public TextView getHolder(){

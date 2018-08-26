@@ -17,7 +17,7 @@ import org.xutils.x;
 public class WebServer {
     OkHttpClient okHttpClient = new OkHttpClient();
     Call call;
-    public static String path = "http://192.168.170.1/";
+    public static String path = "http://192.168.31.137:80";
     HttpManager http = null;
     // 保证dclSingleton实例每次都是从主内存中取
     private volatile static WebServer webServer = null;
@@ -46,7 +46,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/getAllEasys")
+                .url(path+"/easymanagement/getAllEasys")
                 .post(body)
                 .build();
 
@@ -65,7 +65,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/getEasysByAuthor")
+                .url(path+"/easymanagement/getEasysByAuthor")
                 .post(body)
                 .build();
 
@@ -84,7 +84,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/findByEasyId")
+                .url(path+"/easymanagement/findByEasyId")
                 .post(body)
                 .build();
 
@@ -103,7 +103,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/deleteEasyById")
+                .url(path+"/easymanagement/deleteEasyById")
                 .post(body)
                 .build();
 
@@ -130,7 +130,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/addEasy")
+                .url(path+"/easymanagement/addEasy")
                 .post(body)
                 .build();
 
@@ -151,7 +151,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/login")
+                .url(path+"/usermanagement/login")
                 .post(body)
                 .build();
 
@@ -176,7 +176,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/register")
+                .url(path+"/usermanagement/register")
                 .post(body)
                 .build();
 
@@ -197,7 +197,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/getLoginUser")
+                .url(path+"/usermanagement/getLoginUser")
                 .post(body)
                 .build();
 
@@ -218,7 +218,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/validEmail")
+                .url(path+"/usermanagement/validEmail")
                 .post(body)
                 .build();
 
@@ -239,7 +239,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/changePassword")
+                .url(path+"/usermanagement/changePassword")
                 .post(body)
                 .build();
 
@@ -257,7 +257,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/getAllEmail")
+                .url(path+"/usermanagement/getAllEmail")
                 .post(body)
                 .build();
 
@@ -275,7 +275,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/usermanagement/getAllUsername")
+                .url(path+"/usermanagement/getAllUsername")
                 .post(body)
                 .build();
 
@@ -292,7 +292,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/getCountOfEasy")
+                .url(path+"/easymanagement/getCountOfEasy")
                 .post(body)
                 .build();
 
@@ -318,7 +318,7 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/publicdEasy")
+                .url(path+"/easymanagement/publicdEasy")
                 .post(body)
                 .build();
 
@@ -337,7 +337,26 @@ public class WebServer {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.1.111:80/easymanagement/getPublicedEasysByAuthor")
+                .url(path+"/easymanagement/getPublicedEasysByAuthor")
+                .post(body)
+                .build();
+
+        call = okHttpClient.newCall(request);
+        call.enqueue(requestCallBack);
+    }
+
+    /**
+     * 根据Id获取发布的文章
+     * @param publicedeasyid
+     * @param requestCallBack
+     */
+    public void getPublicedEasysById(int publicedeasyid,okhttp3.Callback requestCallBack) {
+        RequestBody body = new FormBody.Builder()
+                .add("publicedeasyid", publicedeasyid+"" )
+                .build();
+
+        Request request = new Request.Builder()
+                .url(path+"/easymanagement/findByPublicedEasyId")
                 .post(body)
                 .build();
 

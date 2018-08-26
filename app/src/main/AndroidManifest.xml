@@ -52,6 +52,7 @@
         <activity android:name=".Activity.ChangePasswordActivity"></activity>
         <activity android:name=".Activity.FabuActivity"></activity>
         <activity android:name=".Activity.PublicedEasyList"></activity>
+        <activity android:name=".Activity.PublicedEasyDetailActivity"></activity>
     </application>
 
 </manifest>

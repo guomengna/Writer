@@ -2,6 +2,7 @@ package com.example.guome.writer.Activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ParseException;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.example.guome.writer.Adapters.EasyListAdapter;
 import com.example.guome.writer.Adapters.PublicedEasyListAdapter;
 import com.example.guome.writer.JavaBean.Easy;
 import com.example.guome.writer.JavaBean.PublicedEasy;
+import com.example.guome.writer.MyTool.DeleteSingleton;
 import com.example.guome.writer.R;
 import com.example.guome.writer.server.WebServer;
 
@@ -50,6 +53,17 @@ public class PublicedEasyList extends Activity implements View.OnClickListener{
         SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         currentUsername=sharedPreferences.getString("username", "");
         init();
+        PublicedEasylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ListView listView = (ListView) parent;
+                PublicedEasy publicedEasy=(PublicedEasy) listView.getItemAtPosition(position);
+                int publicedEasyid = publicedEasy.getPublicedeasyid();
+                Intent intent = new Intent(PublicedEasyList.this, PublicedEasyDetailActivity.class);
+                intent.putExtra("publicedEasyid", publicedEasyid+"");
+                startActivity(intent);
+            }
+        });
     }
     public void init(){
         progressDialog.setMessage("获取中");
