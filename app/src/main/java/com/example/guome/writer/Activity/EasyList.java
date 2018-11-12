@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ import static com.example.guome.writer.http.HttpUtils.getAllEasysJson;
 
 public class EasyList extends Activity implements Button.OnClickListener, PullDownFreshInterface, PullUpFreshInterface {
     private ListView easyListView;
-    private Button back;
+    private ImageButton back;
     private SimpleAdapter productAdapter;
     private List<Easy> easy=new ArrayList<Easy>();
     private Handler handler=new Handler();
@@ -77,7 +78,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
 //        StrictMode.setThreadPolicy(policy);
         progressDialog=new ProgressDialog(EasyList.this);
         easyListView = (ListView) findViewById(R.id.listView);
-        back=findViewById(R.id.backa);
+        back=findViewById(R.id.fanhui);
         back.setOnClickListener(this);
         pullRefreshBar=(PullToRefreshView)findViewById(R.id.refreshBar);
         pullRefreshBar.PullDownParent = this;
@@ -280,7 +281,7 @@ public class EasyList extends Activity implements Button.OnClickListener, PullDo
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.backa:
+            case R.id.fanhui:
                 finish();
                 break;
         }

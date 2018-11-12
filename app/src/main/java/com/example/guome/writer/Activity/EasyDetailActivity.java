@@ -305,7 +305,7 @@ public class EasyDetailActivity extends Activity implements View.OnClickListener
         return currentTime;
     }
 
-
+    //更新方法还没有实现……还没有想好要不要回滚，还是直接覆盖之前的版本
     public void submitOfChange(){
             Toast.makeText(EasyDetailActivity.this,"点击了完成按钮",Toast.LENGTH_SHORT).show();
             progressDialog = new ProgressDialog(EasyDetailActivity.this);
