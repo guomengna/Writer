@@ -2,20 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorofZhuanlan">
-    <RelativeLayout
-        android:id="@+id/MyLayout_top"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentTop="true"
-        android:gravity="center">
+    android:background="@color/white">
 
-        <include
-            android:focusable="true"
-            layout="@layout/main_title"
-            android:id="@+id/layout_top"/>
-    </RelativeLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -25,8 +13,8 @@
 
     </LinearLayout>
     <View android:layout_height="1px"
-        android:background="@color/black"
-        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="0dp"
         android:layout_width="fill_parent">
     </View>
     <!--<LinearLayout
@@ -42,20 +30,51 @@
             android:descendantFocusability="blocksDescendants"
             />
     </LinearLayout>-->
+    <RelativeLayout
+        android:id="@+id/MyLayout_top"
+        android:layout_width="fill_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/fanhui"
+            android:layout_width="26dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.01"
+            android:background="@mipmap/fanhui"
+            android:onClick="onClick" />
+
+        <TextView
+            android:id="@+id/zhuanlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="我的专栏"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
     <com.example.guome.writer.view.PullToRefreshView
         android:id="@+id/refreshBar"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
+
         <ListView
             android:id="@+id/listView"
-            android:dividerHeight="1.5dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="5dp"
-            android:scrollbars="vertical"
-            android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            />
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/publicedeasy_title"
+            android:descendantFocusability="blocksDescendants"
+            android:divider="#00000000"
+            android:dividerHeight="0dp"
+            android:scrollbars="vertical" />
     </com.example.guome.writer.view.PullToRefreshView>
 </LinearLayout>

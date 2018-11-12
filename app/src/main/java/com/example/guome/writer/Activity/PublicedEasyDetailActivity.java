@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ import okhttp3.Response;
  * Created by guome on 2018/8/26.
  */
 
-public class PublicedEasyDetailActivity extends Activity{
+public class PublicedEasyDetailActivity extends Activity implements View.OnClickListener{
     private int publicedeasyid;
     private String author;
     private String content;
@@ -34,6 +36,7 @@ public class PublicedEasyDetailActivity extends Activity{
     private TextView publicedEasyAuthor;
     Handler handler=new Handler();
     private ProgressDialog progressDialog;
+    private ImageButton fanhuiButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +46,16 @@ public class PublicedEasyDetailActivity extends Activity{
         publicedEasyContent=findViewById(R.id.publicedeasy_content);
         publicedEasyAuthor=findViewById(R.id.publicedeasy_author);
         progressDialog=new ProgressDialog(PublicedEasyDetailActivity.this);
-
+        fanhuiButton = findViewById(R.id.fanhui);
         getPublicedEasyById();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fanhui:
+                finish();
+        }
     }
 
     public void getPublicedEasyById(){

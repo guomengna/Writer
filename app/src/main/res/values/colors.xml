@@ -31,4 +31,5 @@
     <color name="colorofZhuanlanTextview">#4cc9ce</color>
     <color name="publicedeasyback">#fcedcc</color>
     <color name="publicedeasyauthor">#fcd070</color>
+    <color name="zhuanlan_background">#c3eff1</color>
 </resources>

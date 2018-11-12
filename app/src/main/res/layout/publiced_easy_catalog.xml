@@ -10,10 +10,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorofZhuanlanTextview"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
+        android:background="@color/publicedeasyback"
         android:orientation="vertical">
 
         <TextView
@@ -25,8 +25,8 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:hint="题目"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/textback_title"
+            android:textColorHint="@color/textback_title"
             android:textSize="18dp"
             android:typeface="sans" />
 
@@ -41,8 +41,8 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="11dp"
             android:hint="文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据文章内容ceshi ,测试数据测试数据测试数据文章内容,ceshi,测试数据测试数据测试数据文章内容,ceshi ,测试数据测试数据测试数据数据当回事"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/textback_title"
+            android:textColorHint="@color/textback_title"
             android:textSize="15dp"
             cb:align="left" />
 
@@ -56,8 +56,8 @@
             android:layout_marginTop="129dp"
             android:gravity="center_vertical"
             android:hint="2018-08-25"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/publicedeasyauthor"
+            android:textColorHint="@color/publicedeasyauthor"
             android:textSize="12dp" />
     </RelativeLayout>
 </LinearLayout>

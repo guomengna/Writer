@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,10 +45,12 @@ public class PublicedEasyList extends Activity implements View.OnClickListener{
     private Handler handler=new Handler();
     private List<PublicedEasy> publicedEasies=new ArrayList<>();
     private PublicedEasyListAdapter publicedEasyListAdapter;
+    private ImageButton backButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicec_easy_layout);
+        backButton = findViewById(R.id.fanhui);
         PublicedEasylistView=findViewById(R.id.listView);
         progressDialog=new ProgressDialog(PublicedEasyList.this);
         SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
@@ -135,7 +138,8 @@ public class PublicedEasyList extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-
+            case R.id.fanhui:
+                finish();
         }
     }
 }
